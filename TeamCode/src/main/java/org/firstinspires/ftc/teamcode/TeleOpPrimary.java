@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Primary Tele-Op", group="Linear Opmode")
 //@Disabled
-public class TeleOpPrimary extends LinearOpMode {
+public class
+TeleOpPrimary extends LinearOpMode {
 
   // Declare OpMode members.
   private MecanumDriveChassis driveChassis;

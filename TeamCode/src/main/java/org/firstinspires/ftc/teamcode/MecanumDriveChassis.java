@@ -69,7 +69,7 @@ public class MecanumDriveChassis
   private double speedScale = 0;
 
   // PID for the heading
-  private final double propCoeff = 1.5;
+  private final double propCoeff = 0.9;
   private final double integCoeff = 0.0;
   private final double diffCoeff = 0.00;
   private final double OutputLowLimit = -1;
@@ -80,7 +80,7 @@ public class MecanumDriveChassis
   private final double SetpointRange = 2*Math.PI;
 
   private final double headingThreshold = 0.05;  // threshold to accept joystick input to change angle.
-  private final int headdingAverageNumberOfSamples = 10;
+  private final int headdingAverageNumberOfSamples = 5;
 
   // number of encoder counts equal to one inch of forward travel
   //  private final int countsPerDriveInch = 5000/117;
@@ -129,10 +129,10 @@ public class MecanumDriveChassis
     // Reverse the motor that runs backwards when connected directly to the battery
     // A positive power number should drive the robot forward regardless of the motor's
     // position on the robot.
-    leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-    leftRearDrive.setDirection(DcMotor.Direction.REVERSE);
-    rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-    rightRearDrive.setDirection(DcMotor.Direction.FORWARD);
+    leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+    leftRearDrive.setDirection(DcMotor.Direction.FORWARD);
+    rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+    rightRearDrive.setDirection(DcMotor.Direction.REVERSE);
 
     RunUsingEncoders();
 
