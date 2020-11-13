@@ -11,7 +11,7 @@ TeleOpPrimary extends LinearOpMode {
 
   // Declare OpMode members.
   private MecanumDriveChassis driveChassis;
-//  private ManipulatorPlatform manipulatorPlatform;
+  private ManipulatorPlatform manipulatorPlatform;
   private LEDs leds;
 
   private final double highSpeed = 1.0;
@@ -58,9 +58,9 @@ TeleOpPrimary extends LinearOpMode {
     telemetry.update();
 
     driveChassis = new MecanumDriveChassis(hardwareMap);
-//    manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
-//    leds = new LEDs(hardwareMap);
-//    leds.goOff();
+    manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
+    leds = new LEDs(hardwareMap);
+    leds.goOff();
 
     // set dead zone to minimize unwanted stick input.
     gamepad1.setJoystickDeadzone((float)0.05);
@@ -71,7 +71,7 @@ TeleOpPrimary extends LinearOpMode {
     waitForStart();
     // runtime.reset();
 
-    //leds.goConfetti();  // start the LEDs in confetti
+    leds.goConfetti();  // start the LEDs in confetti
 
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive())
@@ -82,7 +82,7 @@ TeleOpPrimary extends LinearOpMode {
       if ( eventTimeOut( LEDTimeoutTime ) )
       {
         LEDTimeoutTime = eventTimer.time() + colorSpeed;  // load for next cycle
-      //  leds.goChangeColor();
+        leds.goChangeColor();
       }
 
       // send joystick inputs to the drive chassis
