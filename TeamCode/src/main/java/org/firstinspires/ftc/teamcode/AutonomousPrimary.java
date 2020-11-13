@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.LinkedList;
 import java.util.Queue;
 
-@Autonomous(name = "AutoFwdLeft", group = "Linear Opmode")
+@Autonomous(name = "Auto Primary", group = "Linear Opmode")
 
 //@Disabled
-public class AutoFwdLeft extends LinearOpMode
+public class AutonomousPrimary extends LinearOpMode
 {
 
     // Declare OpMode members.
-    private Autonomous driveChassis;
+    private MecanumDriveChassis driveChassis;
     private ManipulatorPlatform manipulatorPlatform;
     private LEDs leds;
 
@@ -30,10 +30,10 @@ public class AutoFwdLeft extends LinearOpMode
     private final int extenderRetracted  = 0;
     private final int extenderExtended  = 700;
 
+    // All of the following will need to take less than the time allotted for autonomous...
     @Override
     public void runOpMode() {
-
-        driveChassis = new Autonomous(hardwareMap);
+        driveChassis = new MecanumDriveChassis(hardwareMap);
         manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
         leds = new LEDs(hardwareMap);
         leds.goOff();
@@ -53,6 +53,7 @@ public class AutoFwdLeft extends LinearOpMode
         // distance: Only used for FORWARD, BACKWARD, LEFT, RIGHT, modes:  the TIME in seconds to run
         //           the motors.
 
+        // This is just a test routine to test all driving modes.
         Queue<Leg> TestAllFunctions = new LinkedList<>();
         TestAllFunctions.add(new Leg(Leg.Mode.LEFT, 50, 0, 1));
         TestAllFunctions.add(new Leg(Leg.Mode.RIGHT, 50, 0, 1));
@@ -68,11 +69,25 @@ public class AutoFwdLeft extends LinearOpMode
         TestAllFunctions.add(new Leg(Leg.Mode.RIGHT, 50, 0, 1));
 
 
-        Queue<Leg> ParkFwd = new LinkedList<>();
-      ParkFwd.add(new Leg(Leg.Mode.LEFT,50,0,0.3));
-      ParkFwd.add(new Leg(Leg.Mode.FORWARD,50,0,1.7));
+        // These are the working paths for the OpMode
+        Queue<Leg> PathPt1 = new LinkedList<>();
+        PathPt1.add(new Leg(Leg.Mode.RIGHT, 50, 0, .7));
+        PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,2.1));
 
+        // Path down here.
+        Queue<Leg> PathPt2 = new LinkedList<>();
+        PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
+        PathPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
+        PathPt2.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
+        PathPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.0));
+        PathPt2.add(new Leg(Leg.Mode.FORWARD,35, 0,0.3));
 
+        // Path up here.
+        Queue<Leg> PathPt3 = new LinkedList<>();
+        PathPt3.add(new Leg(Leg.Mode.BACKWARDS,35, 0,0.2));
+        PathPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 2.25));
+        PathPt3.add(new Leg(Leg.Mode.FORWARD,35, 0,0.5));
+        PathPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.3));
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -82,11 +97,50 @@ public class AutoFwdLeft extends LinearOpMode
         // Put manipulator movements between the driving loops.
         // If you need more driving load another plan and make another loop.
 
-        driveChassis.startPlan(ParkFwd);
+        // potentially do manipulation here.  Make sure it is done before moving on.
+
+        driveChassis.startPlan(PathPt1);
         while (opModeIsActive() && driveChassis.isDriving())
         {
             // Process the drive chassis
             driveChassis.autoDrive(telemetry);
         }
+
+        // After driving do your manipulation.  You may need a timer based state machine but simple
+        // actions can just be done inline.
+
+        // Do some manipulation...
+
+        // spin for a second to allow whatever to finish (example of wait timer).
+        manipulateimer.reset();
+        while (opModeIsActive() && manipulateimer.time()< 1.0);
+
+        // do second part of drive plan.
+        driveChassis.startPlan(PathPt2);
+        while (opModeIsActive() && driveChassis.isDriving())
+        {
+            // Process the drive chassis
+            driveChassis.autoDrive(telemetry);
+        }
+
+        // After driving do your manipulation.  You may need a timer based state machine but simple
+        // actions can just be done inline.
+
+        // Do some manipulation...
+
+        // spin for a second to allow whatever to finish (example of wait timer).
+        manipulateimer.reset();
+        while (opModeIsActive() && manipulateimer.time()< 1.0);
+
+        // do third part of drive plan.
+        driveChassis.startPlan(PathPt3);
+        while (opModeIsActive() && driveChassis.isDriving())
+        {
+            // Process the drive chassis
+            driveChassis.autoDrive(telemetry);
+        }
+
+        // potentially do manipulation here.  Make sure it is done before moving on because the OpMode will end.
+
     }
 }

@@ -1,20 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
-@Autonomous(name = "AutoFoundationRedWall", group = "Linear Opmode")
+@Autonomous(name = "Auto Multi Primary", group = "Linear Opmode")
 
-//@Disabled
-public class AutoFoundationRedWall extends LinearOpMode
+@Disabled
+public class NotWorkingMultiStageAutonomous extends LinearOpMode
 {
 
   // Declare OpMode members.
-  private Autonomous driveChassis;
+  private MecanumDriveChassis driveChassis;
   private ManipulatorPlatform manipulatorPlatform;
   private LEDs leds;
 
@@ -34,7 +35,7 @@ public class AutoFoundationRedWall extends LinearOpMode
   public void runOpMode()
   {
 
-    driveChassis = new Autonomous(hardwareMap);
+    driveChassis = new MecanumDriveChassis(hardwareMap);
     manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
     leds = new LEDs(hardwareMap);
     leds.goOff();
@@ -69,24 +70,24 @@ public class AutoFoundationRedWall extends LinearOpMode
     TestAllFunctions.add(new Leg(Leg.Mode.RIGHT, 50, 0, 1));
 
 
-    Queue<Leg> LatchPt1 = new LinkedList<>();
-    LatchPt1.add(new Leg(Leg.Mode.RIGHT, 50, 0, .7));
-    LatchPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,2.1));
+    Queue<Leg> PathPt1 = new LinkedList<>();
+    PathPt1.add(new Leg(Leg.Mode.RIGHT, 50, 0, .7));
+    PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,2.1));
 
-    // Latch down here.
-    Queue<Leg> LatchPt2 = new LinkedList<>();
-    LatchPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
-    LatchPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
-    LatchPt2.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
-    LatchPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.0));
-    LatchPt2.add(new Leg(Leg.Mode.FORWARD,35, 0,0.3));
+    // Path down here.
+    Queue<Leg> PathPt2 = new LinkedList<>();
+    PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
+    PathPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
+    PathPt2.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
+    PathPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.0));
+    PathPt2.add(new Leg(Leg.Mode.FORWARD,35, 0,0.3));
   
-    // Latch up here.
-    Queue<Leg> LatchPt3 = new LinkedList<>();
-    LatchPt3.add(new Leg(Leg.Mode.BACKWARDS,35, 0,0.2));
-    LatchPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 2.25));
-    LatchPt3.add(new Leg(Leg.Mode.FORWARD,35, 0,0.5));
-    LatchPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.3));
+    // Path up here.
+    Queue<Leg> PathPt3 = new LinkedList<>();
+    PathPt3.add(new Leg(Leg.Mode.BACKWARDS,35, 0,0.2));
+    PathPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 2.25));
+    PathPt3.add(new Leg(Leg.Mode.FORWARD,35, 0,0.5));
+    PathPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.3));
     
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
@@ -96,9 +97,9 @@ public class AutoFoundationRedWall extends LinearOpMode
     // until the driving is done.
     // Put manipulator movements between the driving loops.
     // If you need more driving load another plan and make another loop.
-    manipulatorPlatform.latchPosition(true);  // unlatch
+//    manipulatorPlatform.PathPosition(true);  // unPath
     
-    driveChassis.startPlan(LatchPt1);
+    driveChassis.startPlan(PathPt1);
     while (opModeIsActive() && driveChassis.isDriving())
     {
       // Process the drive chassis
@@ -107,14 +108,14 @@ public class AutoFoundationRedWall extends LinearOpMode
 
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
-    manipulatorPlatform.latchPosition(false);  // latch
-    // spin for a second to allow latches to move.
+//    manipulatorPlatform.PathPosition(false);  // Path
+    // spin for a second to allow Pathes to move.
     manipulateimer.reset();
     while (opModeIsActive() && manipulateimer.time()< 1.0);
 
 
     // do second part of drive plan.
-    driveChassis.startPlan(LatchPt2);
+    driveChassis.startPlan(PathPt2);
     while (opModeIsActive() && driveChassis.isDriving())
     {
       // Process the drive chassis
@@ -123,13 +124,13 @@ public class AutoFoundationRedWall extends LinearOpMode
 
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
-    manipulatorPlatform.latchPosition(true);  // unlatch
-    // spin for a second to allow latches to move.
+//    manipulatorPlatform.PathPosition(true);  // unPath
+    // spin for a second to allow Pathes to move.
     manipulateimer.reset();
     while (opModeIsActive() && manipulateimer.time()< 1.0);
 
     // do third part of drive plan.
-    driveChassis.startPlan(LatchPt3);
+    driveChassis.startPlan(PathPt3);
     while (opModeIsActive() && driveChassis.isDriving())
     {
       // Process the drive chassis

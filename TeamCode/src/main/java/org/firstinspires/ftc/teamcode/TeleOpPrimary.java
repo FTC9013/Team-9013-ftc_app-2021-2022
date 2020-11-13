@@ -17,18 +17,11 @@ TeleOpPrimary extends LinearOpMode {
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
 
-  private final int elevatorDown  = 00;
-  private final int elevatorLevelOne    = 800;
-  private final int elevatorLevelTwo    = 1600;
-  private final int elevatorLevelThree  = 2400;
+  private final int wobbleDown  = 200;
+  private final int wobbleUp    = 0;
 
-
-  private final boolean suckStones = true;
-  private final boolean spitStones = false;
-
-  private boolean suckingStones = false;
-  private boolean spittingStones = false;
-
+  private final boolean wobbleExtend = true;
+  private final boolean wobbleRetract = false;
 
   // private ElapsedTime runtime = new ElapsedTime();
   // a timer for the various automation activities.
@@ -192,76 +185,22 @@ TeleOpPrimary extends LinearOpMode {
       // ***************************
       // Second seat...  controls (game pad 2)
 
-      //RIGHT JOY STICK
-      // Forward push command Extender all the way out (to encoder count = XXXX)
-      // Backward push command Extender all the way in (encoder count = 0)
-//      if (gamepad2.right_stick_y < -0.5) // forward in -Y
-//      {
-//        manipulatorPlatform.extenderOut();
-//      }
-//
-//      if (gamepad2.right_stick_y > 0.5) // Backward is +Y
-//      {
-//        manipulatorPlatform.extenderIn();
-//      }
-//
-//      // D‐PAD – Controls Grabber head orientation (0° or 90°)
-//      // a. D‐Up commands Servo4 (Hub 2, servo port 4) to 0° (0)
-//      // b. D‐Down commands Servo4 to 90° (1)
-//      if (gamepad2.dpad_up)
-//      {
-//        manipulatorPlatform.rotate0();
-//      }
-//
-//      if (gamepad2.dpad_down)
-//      {
-//        manipulatorPlatform.rotate90();
-//      }
-//
-//      // LEFT BUMP – commands Grabber Servo3 (Hub 2, servo port 2) to close (0),
-//      //   and,Release Stone (Hub 2, Servo5, Port 5) to open.
-//      if (gamepad2.left_bumper)
-//      {
-//        manipulatorPlatform.grabberRelease();
-//        manipulatorPlatform.gatherHold();
-//      }
-//
-//      // RIGHT BUMP – commands Servo3 (Hub 2, servo port 2) to open (1)
-//      if (gamepad2.right_bumper)  // grab
-//      {
-//        manipulatorPlatform.grabberGrab();
-//        manipulatorPlatform.gatherRelease();
-//      }
-//
-//      // A – Commands Elevator motor (Hub 2, motor port 2) to Level 1 (encoder count X)
-//      if (gamepad2.a)   // retract
-//      {
-//        manipulatorPlatform.elevatorPosition(elevatorLevelOne);
-//      }
-//
-//      // X – Commands Elevator motor (Hub 2, motor port 2) to Level 2 (encoder count Y)
-//      if (gamepad2.x)
-//      {
-//        manipulatorPlatform.elevatorPosition(elevatorLevelTwo);
-//      }
-//
-//      // Y – Commands Elevator motor (Hub 2, motor port 2) to Level 3 (encoder count Z)
-//      if (gamepad2.y)
-//      {
-//        manipulatorPlatform.elevatorPosition(elevatorLevelThree);
-//      }
-//
-//      // B – Commands Elevator motor (Hub 2, motor port 2) to Down/Home (encoder count 0)
-//      if (gamepad2.b)   // Extend
-//      {
-//        manipulatorPlatform.elevatorPosition(elevatorDown);
-//      }
-//
-//      // Back button – resets the elevator
-//      if (gamepad2.back)
-//      {
-//        manipulatorPlatform.resetExtender();
-//      }
+      // D‐PAD – Controls
+      if (gamepad2.dpad_up)
+      {
+        manipulatorPlatform.setWobblePosition(wobbleUp);
+      }
+
+      if (gamepad2.dpad_down)
+      {
+        manipulatorPlatform.setWobblePosition(wobbleDown);
+      }
+
+      // Y – Commands Elevator motor (Hub 2, motor port 2) to Level 3 (encoder count Z)
+      if (gamepad2.y)
+      {
+        manipulatorPlatform.wobbleExtend(wobbleExtend);
+      }
     }
   }
 
