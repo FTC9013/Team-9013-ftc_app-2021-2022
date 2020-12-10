@@ -71,8 +71,8 @@ public class AutonomousPrimary extends LinearOpMode
 
         // These are the working paths for the OpMode
         Queue<Leg> PathPt1 = new LinkedList<>();
-        PathPt1.add(new Leg(Leg.Mode.RIGHT, 50, 0, .7));
-        PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,2.1));
+        PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+        PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
 
         // Path down here.
         Queue<Leg> PathPt2 = new LinkedList<>();
@@ -112,16 +112,16 @@ public class AutonomousPrimary extends LinearOpMode
         // Do some manipulation...
 
         // spin for a second to allow whatever to finish (example of wait timer).
-        manipulateimer.reset();
-        while (opModeIsActive() && manipulateimer.time()< 1.0);
-
-        // do second part of drive plan.
-        driveChassis.startPlan(PathPt2);
-        while (opModeIsActive() && driveChassis.isDriving())
-        {
-            // Process the drive chassis
-            driveChassis.autoDrive(telemetry);
-        }
+//        manipulateimer.reset();
+//        while (opModeIsActive() && manipulateimer.time()< 1.0);
+//
+//        // do second part of drive plan.
+//        driveChassis.startPlan(PathPt2);
+//        while (opModeIsActive() && driveChassis.isDriving())
+//        {
+//            // Process the drive chassis
+//            driveChassis.autoDrive(telemetry);
+//        }
 
         // After driving do your manipulation.  You may need a timer based state machine but simple
         // actions can just be done inline.
@@ -129,16 +129,16 @@ public class AutonomousPrimary extends LinearOpMode
         // Do some manipulation...
 
         // spin for a second to allow whatever to finish (example of wait timer).
-        manipulateimer.reset();
-        while (opModeIsActive() && manipulateimer.time()< 1.0);
-
-        // do third part of drive plan.
-        driveChassis.startPlan(PathPt3);
-        while (opModeIsActive() && driveChassis.isDriving())
-        {
-            // Process the drive chassis
-            driveChassis.autoDrive(telemetry);
-        }
+//        manipulateimer.reset();
+//        while (opModeIsActive() && manipulateimer.time()< 1.0);
+//
+//        // do third part of drive plan.
+//        driveChassis.startPlan(PathPt3);
+//        while (opModeIsActive() && driveChassis.isDriving())
+//        {
+//            // Process the drive chassis
+//            driveChassis.autoDrive(telemetry);
+//        }
 
         // potentially do manipulation here.  Make sure it is done before moving on because the OpMode will end.
 

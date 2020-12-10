@@ -17,7 +17,7 @@ TeleOpPrimary extends LinearOpMode {
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
 
-  private final int wobbleDown  = 200;
+  private final int wobbleDown  = 315;
   private final int wobbleUp    = 0;
 
   private final boolean wobbleExtend = true;
@@ -57,7 +57,7 @@ TeleOpPrimary extends LinearOpMode {
 
     // set dead zone to minimize unwanted stick input.
     gamepad1.setJoystickDeadzone((float)0.05);
-
+    manipulatorPlatform.wobbleExtend(wobbleRetract);
     boolean goingFast = false;
 
     // Wait for the game to start (driver presses PLAY)
@@ -188,12 +188,12 @@ TeleOpPrimary extends LinearOpMode {
       // D‐PAD – Controls
       if (gamepad2.dpad_up)
       {
-        manipulatorPlatform.setWobblePosition(wobbleUp);
+        manipulatorPlatform.setWobblePosition(wobbleDown);
       }
 
       if (gamepad2.dpad_down)
       {
-        manipulatorPlatform.setWobblePosition(wobbleDown);
+        manipulatorPlatform.setWobblePosition(wobbleUp);
       }
 
       // Y – Commands Elevator motor (Hub 2, motor port 2) to Level 3 (encoder count Z)

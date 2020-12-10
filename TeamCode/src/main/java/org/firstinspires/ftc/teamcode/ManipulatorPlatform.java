@@ -15,7 +15,8 @@ public class ManipulatorPlatform
   private DcMotorEx wobbleMotor = null;
 
   private Servo wobbleServo = null;
-
+  
+  
   //private RevTouchSensor stonePresentSensor = null;
   //private RevTouchSensor extenderRetractedSensor = null;
 
@@ -36,9 +37,9 @@ public class ManipulatorPlatform
     // step (using the FTC Robot Controller app on the phone).
 
     wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
-
+    
     wobbleMotor = (DcMotorEx)hardwareMap.get(DcMotor.class, "wobbleMotor");
-    wobbleMotor.setDirection(DcMotor.Direction.REVERSE);
+    wobbleMotor.setDirection(DcMotor.Direction.FORWARD);
     PIDFCoefficients wobblePIDNew = new PIDFCoefficients( wobbleP, wobbleI, wobbleD, wobbleF );
     wobbleMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,wobblePIDNew);
     wobbleMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
