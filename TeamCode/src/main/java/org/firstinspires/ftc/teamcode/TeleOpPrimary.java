@@ -22,6 +22,9 @@ TeleOpPrimary extends LinearOpMode {
 
   private final boolean wobbleExtend = true;
   private final boolean wobbleRetract = false;
+  
+  private final boolean forkExtend = true;
+  private final boolean forkRetract = false;
 
   // private ElapsedTime runtime = new ElapsedTime();
   // a timer for the various automation activities.
@@ -196,10 +199,22 @@ TeleOpPrimary extends LinearOpMode {
         manipulatorPlatform.setWobblePosition(wobbleUp);
       }
 
-      // Y – Commands Elevator motor (Hub 2, motor port 2) to Level 3 (encoder count Z)
+      // Y – Pushes wobble mechanism out
       if (gamepad2.y)
       {
         manipulatorPlatform.wobbleExtend(wobbleExtend);
+      }
+  
+      // X – Pushes the fork mechanism down
+      if (gamepad2.x)
+      {
+        manipulatorPlatform.forkExtend(forkExtend);
+      }
+  
+      // B – Pull fork mechanism back up
+      if (gamepad2.b)
+      {
+        manipulatorPlatform.forkExtend(forkRetract);
       }
     }
   }

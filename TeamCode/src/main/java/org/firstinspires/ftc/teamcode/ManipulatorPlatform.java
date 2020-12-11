@@ -15,7 +15,7 @@ public class ManipulatorPlatform
   private DcMotorEx wobbleMotor = null;
 
   private Servo wobbleServo = null;
-  
+  private Servo forkServo = null;
   
   //private RevTouchSensor stonePresentSensor = null;
   //private RevTouchSensor extenderRetractedSensor = null;
@@ -37,6 +37,7 @@ public class ManipulatorPlatform
     // step (using the FTC Robot Controller app on the phone).
 
     wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
+    forkServo = hardwareMap.get(Servo.class, "forkServo");
     
     wobbleMotor = (DcMotorEx)hardwareMap.get(DcMotor.class, "wobbleMotor");
     wobbleMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -67,7 +68,19 @@ public class ManipulatorPlatform
       wobbleServo.setPosition(0);
     }
   }
-
+  
+  
+  void forkExtend(boolean position)
+  {
+    if(position) // Closed (1)
+    {
+      forkServo.setPosition(1);
+    }
+    else
+    {
+      forkServo.setPosition(0);
+    }
+  }
   /*  void resetExtender()
   {
     boolean calFlag = true;
