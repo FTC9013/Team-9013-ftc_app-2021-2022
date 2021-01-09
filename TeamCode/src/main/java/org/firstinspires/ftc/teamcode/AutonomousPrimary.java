@@ -29,6 +29,9 @@ public class AutonomousPrimary extends LinearOpMode
 
     private final int extenderRetracted  = 0;
     private final int extenderExtended  = 700;
+  
+  private final boolean forkExtend = true;
+  private final boolean forkRetract = false;
 
     // All of the following will need to take less than the time allotted for autonomous...
     @Override
@@ -37,7 +40,7 @@ public class AutonomousPrimary extends LinearOpMode
         manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
         leds = new LEDs(hardwareMap);
         leds.goOff();
-
+      
         // build all the drive plans for drive by distance (time in seconds)
         //
         // Each leg of the trip is added to the queue in this code block.
@@ -73,8 +76,49 @@ public class AutonomousPrimary extends LinearOpMode
         Queue<Leg> PathPt1 = new LinkedList<>();
         PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
         PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
-
-        // Path down here.
+  
+      // These are the working paths for the OpMode
+      Queue<Leg> PathPt1a = new LinkedList<>();
+      PathPt1a.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      // PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
+      
+      // These are the working paths for the OpMode
+      Queue<Leg> PathPt1b = new LinkedList<>();
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      PathPt1b.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
+  
+  
+      // These are the working paths for the OpMode
+      Queue<Leg> PathPt1c = new LinkedList<>();
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      PathPt1c.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
+      PathPt1c.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      PathPt1c.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
+  
+  
+      // These are the working paths for the OpMode
+      Queue<Leg> PathPt1d = new LinkedList<>();
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      PathPt1d.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
+      PathPt1d.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      PathPt1d.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
+      PathPt1d.add(new Leg(Leg.Mode.TURN,35, 5,0));
+      PathPt1d.add(new Leg(Leg.Mode.FORWARD,35, 0,3.5));
+  
+      // These are the working paths for the OpMode
+      Queue<Leg> PathPt1d_back = new LinkedList<>();
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      PathPt1d_back.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3));
+  
+  
+      // These are the working paths for the OpMode
+      Queue<Leg> PathPt1c_back = new LinkedList<>();
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      PathPt1c_back.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      PathPt1c_back.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
+      PathPt1c_back.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
+      PathPt1c_back.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
+      
         Queue<Leg> PathPt2 = new LinkedList<>();
         PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
         PathPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
@@ -90,6 +134,9 @@ public class AutonomousPrimary extends LinearOpMode
         PathPt3.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.3));
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+      manipulatorPlatform.forkExtend(forkExtend);
+      int x = 0;
+      while(x<300000000){x++;}
 
         // for each piece of the drive & manipulate plan you will need to load a plan and then put
         // a while loop, like the following example, that repeatedly calls the autoDrive method
@@ -98,13 +145,21 @@ public class AutonomousPrimary extends LinearOpMode
         // If you need more driving load another plan and make another loop.
 
         // potentially do manipulation here.  Make sure it is done before moving on.
-
-        driveChassis.startPlan(PathPt1);
+      
+        driveChassis.startPlan(PathPt1d);
         while (opModeIsActive() && driveChassis.isDriving())
         {
+          
             // Process the drive chassis
             driveChassis.autoDrive(telemetry);
         }
+        
+      manipulatorPlatform.forkExtend(forkRetract);
+         driveChassis.startPlan(PathPt1d_back);
+      while (opModeIsActive() && driveChassis.isDriving())
+      {
+        driveChassis.autoDrive(telemetry);
+      }
 
         // After driving do your manipulation.  You may need a timer based state machine but simple
         // actions can just be done inline.
