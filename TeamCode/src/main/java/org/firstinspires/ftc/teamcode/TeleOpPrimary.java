@@ -188,17 +188,17 @@ TeleOpPrimary extends LinearOpMode {
       // ***************************
       // Second seat...  controls (game pad 2)
 
-      // D‐PAD – Controls
+// D‐PAD – Controls
       if (gamepad2.dpad_up)
       {
-        manipulatorPlatform.setWobblePosition(wobbleDown);
+        manipulatorPlatform.forkExtend(forkRetract);
       }
-
+  
       if (gamepad2.dpad_down)
       {
-        manipulatorPlatform.setWobblePosition(wobbleUp);
+        manipulatorPlatform.forkExtend(forkExtend);
       }
-
+  
       // Y – Pushes wobble mechanism out
       if (gamepad2.y)
       {
@@ -208,13 +208,12 @@ TeleOpPrimary extends LinearOpMode {
       // X – Pushes the fork mechanism down
       if (gamepad2.x)
       {
-        manipulatorPlatform.forkExtend(forkExtend);
+        manipulatorPlatform.setWobblePosition(wobbleDown);
       }
   
-      // B – Pull fork mechanism back up
-      if (gamepad2.b)
+      if (gamepad2.a)
       {
-        manipulatorPlatform.forkExtend(forkRetract);
+        manipulatorPlatform.setWobblePosition(wobbleUp);
       }
     }
   }
@@ -225,3 +224,6 @@ TeleOpPrimary extends LinearOpMode {
     return eventTimer.time() > eventTime;
   }
 }
+
+
+
