@@ -22,22 +22,24 @@ import java.util.Queue;
 public class AutonomousPrimary extends LinearOpMode
 {
 
-    // Declare OpMode members.
-    private MecanumDriveChassis driveChassis;
-    private ManipulatorPlatform manipulatorPlatform;
-    private LEDs leds;
+  // Declare OpMode members.
+  private MecanumDriveChassis driveChassis;
+  private ManipulatorPlatform manipulatorPlatform;
+  private LEDs leds;
 
-    private ElapsedTime manipulateimer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
+  private ElapsedTime manipulateTimer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
-    // save for later
-    // private static final float mmPerInch = 25.4f;
-    // private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-    // private static final float mmTargetHeight = (6) * mmPerInch; // the height of the center of the target image above the floor
+  // save for later
+  // private static final float mmPerInch = 25.4f;
+  // private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+  // private static final float mmTargetHeight = (6) * mmPerInch; // the height of the center of the target image above the floor
 
-    private boolean extendedFlag = false;
+  private boolean extendedFlag = false;
 
-    private final int extenderRetracted  = 0;
-    private final int extenderExtended  = 700;
+  private final int extenderRetracted  = 0;
+  private final int extenderExtended  = 700;
+
+  private final float searchTime = 5;  // sets the time (Seconds) to search for rings before declaring NONE.
   
   private final boolean forkExtend = true;
   private final boolean forkRetract = false;
@@ -45,6 +47,9 @@ public class AutonomousPrimary extends LinearOpMode
   private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Quad";
   private static final String LABEL_SECOND_ELEMENT = "Single";
+
+  private enum objectCount { UNKNOWN, SINGLE, QUAD, NONE }
+  private objectCount ringCount = objectCount.UNKNOWN;
 
   /**
    * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -107,46 +112,46 @@ public class AutonomousPrimary extends LinearOpMode
       PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
   
       // These are the working paths for the OpMode
-      Queue<Leg> PathPt1a = new LinkedList<>();
-      PathPt1a.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      Queue<Leg> NoRingPath = new LinkedList<>();
+      NoRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
       // PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
       
       // These are the working paths for the OpMode
-      Queue<Leg> PathPt1b = new LinkedList<>();
+      Queue<Leg> NoRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      PathPt1b.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
+      NoRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
   
   
       // These are the working paths for the OpMode
-      Queue<Leg> PathPt1c = new LinkedList<>();
+      Queue<Leg> SingleRingPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      PathPt1c.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
-      PathPt1c.add(new Leg(Leg.Mode.TURN,35, 20,0));
-      PathPt1c.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
+      SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
+      SingleRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
   
   
       // These are the working paths for the OpMode
-      Queue<Leg> PathPt1d = new LinkedList<>();
+      Queue<Leg> QuadRingPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      PathPt1d.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
-      PathPt1d.add(new Leg(Leg.Mode.TURN,35, 20,0));
-      PathPt1d.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
-      PathPt1d.add(new Leg(Leg.Mode.TURN,35, 5,0));
-      PathPt1d.add(new Leg(Leg.Mode.FORWARD,35, 0,3.5));
+      QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
+      QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
+      QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 5,0));
+      QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.5));
   
       // These are the working paths for the OpMode
-      Queue<Leg> PathPt1d_back = new LinkedList<>();
+      Queue<Leg> QuadRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      PathPt1d_back.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3));
+      QuadRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3));
   
   
       // These are the working paths for the OpMode
-      Queue<Leg> PathPt1c_back = new LinkedList<>();
+      Queue<Leg> SingleRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      PathPt1c_back.add(new Leg(Leg.Mode.TURN,35, 0,0));
-      PathPt1c_back.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
-      PathPt1c_back.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
-      PathPt1c_back.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
       
       Queue<Leg> PathPt2 = new LinkedList<>();
       PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
@@ -187,14 +192,10 @@ public class AutonomousPrimary extends LinearOpMode
 
       waitForStart();
 
-      // TODO Need to know if there is a sensor on the fork?
-      manipulatorPlatform.forkExtend(forkExtend);
-      manipulateimer.reset();
-      while (opModeIsActive() && manipulateimer.time()< 1.0);
-
       if (opModeIsActive())
       {
-        while (opModeIsActive())
+        manipulateTimer.reset(); // time search for rings
+        while (opModeIsActive() && ringCount == objectCount.UNKNOWN)
         {
           if (tfod != null)
           {
@@ -215,7 +216,8 @@ public class AutonomousPrimary extends LinearOpMode
                 // list is not empty.
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
-                for (Recognition recognition : updatedRecognitions) {
+                for (Recognition recognition : updatedRecognitions)
+                {
                   telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                   telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                       recognition.getLeft(), recognition.getTop());
@@ -223,17 +225,29 @@ public class AutonomousPrimary extends LinearOpMode
                       recognition.getRight(), recognition.getBottom());
 
                   // check label to see which target zone to go after.
-                  if (recognition.getLabel().equals("Single")) {
+                  if (recognition.getLabel().equals("Single"))
+                  {
                     telemetry.addData("Target Zone", "B");
-                  } else if (recognition.getLabel().equals("Quad")) {
+                    ringCount = objectCount.SINGLE;
+                  }
+                  else if (recognition.getLabel().equals("Quad"))
+                  {
                     telemetry.addData("Target Zone", "C");
-                  } else {
+                    ringCount = objectCount.QUAD;
+                  }
+                  else
+                  {
                     telemetry.addData("Target Zone", "UNKNOWN");
                   }
                 }
               }
               telemetry.update();
             }
+          }
+          // Check timer. If expired then no rings are seen thus set count to 'NONE'
+          if(manipulateTimer.time() > searchTime)
+          {
+            ringCount = objectCount.NONE;
           }
         }
       }
@@ -251,20 +265,62 @@ public class AutonomousPrimary extends LinearOpMode
 
       // potentially do manipulation here.  Make sure it is done before moving on.
 
-      driveChassis.startPlan(PathPt1d);
+      // drive the object path
+      if(ringCount == objectCount.SINGLE)
+      {
+        driveChassis.startPlan(SingleRingPath);
+      }
+      else if(ringCount == objectCount.QUAD)
+      {
+        driveChassis.startPlan(QuadRingPath);
+      }
+      else // no rings
+      {
+        driveChassis.startPlan(NoRingPath);
+      }
+
+      // TODO Need to know if there is a sensor on the fork?
+      manipulatorPlatform.forkExtend(forkExtend);
+      manipulateTimer.reset();
+
+      // this waits for manipulateTimer to count up to allow the fork to extend before moving.
+      // TODO may be able to remove this wait if TFOD takes time to find objects.
+      while (opModeIsActive() && manipulateTimer.time()< 1.0);
+
       while (opModeIsActive() && driveChassis.isDriving())
       {
-
         // Process the drive chassis
         driveChassis.autoDrive(telemetry);
       }
 
+
+      // TODO Need to know if there is a sensor on the fork?
       manipulatorPlatform.forkExtend(forkRetract);
-      driveChassis.startPlan(PathPt1d_back);
+      manipulateTimer.reset();
+
+      // this waits for manipulateTimer to count up to allow the fork to extend before moving.
+      // TODO may be able to remove this wait if TFOD takes time to find objects.
+      while (opModeIsActive() && manipulateTimer.time()< 1.0);
+
+
+      // drive the back path
+      if(ringCount == objectCount.SINGLE)
+      {
+        driveChassis.startPlan(SingleRingReturnPath);
+      }
+      else if(ringCount == objectCount.QUAD)
+      {
+        driveChassis.startPlan(QuadRingReturnPath);
+      }
+      else // no rings
+      {
+        driveChassis.startPlan(NoRingReturnPath);
+      }
       while (opModeIsActive() && driveChassis.isDriving())
       {
         driveChassis.autoDrive(telemetry);
       }
+
 
       // After driving do your manipulation.  You may need a timer based state machine but simple
       // actions can just be done inline.

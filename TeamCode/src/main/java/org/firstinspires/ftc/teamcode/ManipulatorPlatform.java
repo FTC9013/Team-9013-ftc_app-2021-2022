@@ -17,7 +17,7 @@ public class ManipulatorPlatform
   private Servo wobbleServo = null;
   private Servo forkServo = null;
   
-  //private RevTouchSensor stonePresentSensor = null;
+//  private RevTouchSensor wobbleZeroSensor = null;
   //private RevTouchSensor extenderRetractedSensor = null;
 
 
@@ -38,6 +38,7 @@ public class ManipulatorPlatform
 
     wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
     forkServo = hardwareMap.get(Servo.class, "forkServo");
+//    wobbleZeroSensor = hardwareMap.get(RevTouchSensor.class,"wobbleSensor");
     
     wobbleMotor = (DcMotorEx)hardwareMap.get(DcMotor.class, "wobbleMotor");
     wobbleMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -55,6 +56,17 @@ public class ManipulatorPlatform
   {
     wobbleMotor.setTargetPosition(count);
   }
+
+//  void homeWobblePosition()
+//  {
+//    wobbleMotor.setPower(0.5);
+//    wobbleMotor.setTargetPosition(5000);  // go far
+//    while(!wobbleZeroSensor.isPressed())
+//    {
+//
+//    }
+//
+//  }
 
 
   void wobbleExtend(boolean position)

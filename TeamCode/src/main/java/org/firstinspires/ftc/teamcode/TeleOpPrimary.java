@@ -17,8 +17,9 @@ TeleOpPrimary extends LinearOpMode {
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
 
-  private final int wobbleDown  = 315;
-  private final int wobbleUp    = 0;
+  private final int wobbleUp = 315;
+  private final int wobbleDown = 0;
+  private final int wobbleRelease = -315;
 
   private final boolean wobbleExtend = true;
   private final boolean wobbleRetract = false;
@@ -198,22 +199,35 @@ TeleOpPrimary extends LinearOpMode {
       {
         manipulatorPlatform.forkExtend(forkExtend);
       }
-  
+
       // Y – Pushes wobble mechanism out
       if (gamepad2.y)
       {
         manipulatorPlatform.wobbleExtend(wobbleExtend);
       }
-  
-      // X – Pushes the fork mechanism down
-      if (gamepad2.x)
+
+
+      // Pulls wobble mechanism in
+      if (gamepad2.left_bumper)
       {
-        manipulatorPlatform.setWobblePosition(wobbleDown);
+        manipulatorPlatform.wobbleExtend(wobbleRetract);
+      }
+
+
+      // X – Pushes the fork mechanism down
+      if (gamepad2.b)
+      {
+        manipulatorPlatform.setWobblePosition(wobbleUp);
       }
   
       if (gamepad2.a)
       {
-        manipulatorPlatform.setWobblePosition(wobbleUp);
+        manipulatorPlatform.setWobblePosition(wobbleDown);
+      }
+
+      if (gamepad2.x)
+      {
+        manipulatorPlatform.setWobblePosition(wobbleRelease);
       }
     }
   }
