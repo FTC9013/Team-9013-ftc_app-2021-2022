@@ -111,23 +111,35 @@ public class AutonomousPrimary extends LinearOpMode
       PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
       PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
   
-      // These are the working paths for the OpMode
+      // These are the working paths for the OpMode // Path A
+  
       Queue<Leg> NoRingPath = new LinkedList<>();
-      NoRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
       // PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
-      
+      NoRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
+      NoRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      NoRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
+  
+  
       // These are the working paths for the OpMode
       Queue<Leg> NoRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      NoRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
+      NoRingReturnPath.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      NoRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
+      NoRingReturnPath.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
+      NoRingReturnPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
   
+  
+  
+      // These are the working paths for the OpMode  //Path B
+      
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      Queue<Leg> SingleRingPath = new LinkedList<>();
+      SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
   
       // These are the working paths for the OpMode
-      Queue<Leg> SingleRingPath = new LinkedList<>();
+      Queue<Leg> SingleRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
-      SingleRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
-      SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
   
   
       // These are the working paths for the OpMode
@@ -145,14 +157,6 @@ public class AutonomousPrimary extends LinearOpMode
       QuadRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3));
   
   
-      // These are the working paths for the OpMode
-      Queue<Leg> SingleRingReturnPath = new LinkedList<>();
-      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      SingleRingReturnPath.add(new Leg(Leg.Mode.TURN,35, 0,0));
-      SingleRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
-      SingleRingReturnPath.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
-      SingleRingReturnPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
-      
       Queue<Leg> PathPt2 = new LinkedList<>();
       PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
       PathPt2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
@@ -214,6 +218,7 @@ public class AutonomousPrimary extends LinearOpMode
               else
               {
                 // list is not empty.
+                
                 // step through the list of recognitions and display boundary info.
                 int i = 0;
                 for (Recognition recognition : updatedRecognitions)
