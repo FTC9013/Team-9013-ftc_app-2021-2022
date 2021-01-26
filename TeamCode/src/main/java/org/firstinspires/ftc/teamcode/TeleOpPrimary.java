@@ -217,7 +217,7 @@ TeleOpPrimary extends LinearOpMode {
       // X – Pushes the fork mechanism down
       if (gamepad2.b)
       {
-        manipulatorPlatform.setWobblePosition(wobbleUp);
+        manipulatorPlatform.setWobblePosition(wobbleRelease);
       }
   
       if (gamepad2.a)
@@ -227,7 +227,7 @@ TeleOpPrimary extends LinearOpMode {
 
       if (gamepad2.x)
       {
-        manipulatorPlatform.setWobblePosition(wobbleRelease);
+        manipulatorPlatform.setWobblePosition(wobbleUp);
       }
     }
   }

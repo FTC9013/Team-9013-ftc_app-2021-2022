@@ -121,14 +121,20 @@ public class AutonomousPrimary extends LinearOpMode
   
   
       // These are the working paths for the OpMode
-      Queue<Leg> NoRingReturnPath = new LinkedList<>();
+      Queue<Leg> NoRingReturnPath1 = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      NoRingReturnPath.add(new Leg(Leg.Mode.TURN,35, 0,0));
-      NoRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
-      NoRingReturnPath.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
-      NoRingReturnPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
-  
-  
+      NoRingReturnPath1.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      NoRingReturnPath1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
+      NoRingReturnPath1.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
+      NoRingReturnPath1.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
+      
+      
+      // These are the working paths for the OpMode
+      Queue<Leg> NoRingReturnPath2 = new LinkedList<>();
+      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      NoRingReturnPath2.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      NoRingReturnPath2.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
+      
   
       // These are the working paths for the OpMode  //Path B
       
@@ -137,10 +143,11 @@ public class AutonomousPrimary extends LinearOpMode
       SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
   
       // These are the working paths for the OpMode
-      Queue<Leg> SingleRingReturnPath = new LinkedList<>();
+      Queue<Leg> SingleRingReturnPath2 = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      SingleRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
-  
+      SingleRingReturnPath2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.9));
+      SingleRingReturnPath2.add(new Leg(Leg.Mode.LEFT,35, 0,0.7));
+      SingleRingReturnPath2.add(new Leg(Leg.Mode.TURN,35, 0,0));
   
       // These are the working paths for the OpMode
       Queue<Leg> QuadRingPath = new LinkedList<>();
@@ -148,14 +155,16 @@ public class AutonomousPrimary extends LinearOpMode
       QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
       QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
       QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
-      QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 5,0));
+      QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 4,0));
       QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.5));
   
       // These are the working paths for the OpMode
-      Queue<Leg> QuadRingReturnPath = new LinkedList<>();
+      Queue<Leg> QuadRingReturnPath2 = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      QuadRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3));
-  
+      QuadRingReturnPath2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3.5));
+      QuadRingReturnPath2.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
+      QuadRingReturnPath2.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      
   
       Queue<Leg> PathPt2 = new LinkedList<>();
       PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
@@ -311,15 +320,15 @@ public class AutonomousPrimary extends LinearOpMode
       // drive the back path
       if(ringCount == objectCount.SINGLE)
       {
-        driveChassis.startPlan(SingleRingReturnPath);
+        driveChassis.startPlan(SingleRingReturnPath2);
       }
       else if(ringCount == objectCount.QUAD)
       {
-        driveChassis.startPlan(QuadRingReturnPath);
+        driveChassis.startPlan(QuadRingReturnPath2);
       }
       else // no rings
       {
-        driveChassis.startPlan(NoRingReturnPath);
+        driveChassis.startPlan(NoRingReturnPath2);
       }
       while (opModeIsActive() && driveChassis.isDriving())
       {
