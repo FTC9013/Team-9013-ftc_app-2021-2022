@@ -8,15 +8,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 
 public class ManipulatorPlatform
 {
   private DcMotorEx wobbleMotor = null;
+  private DcMotorEx shooterMotor = null;
 
   private Servo wobbleServo = null;
   private Servo forkServo = null;
-  
+  private Servo shooterServo = null;
+
 //  private RevTouchSensor wobbleZeroSensor = null;
   //private RevTouchSensor extenderRetractedSensor = null;
 
@@ -38,7 +41,9 @@ public class ManipulatorPlatform
 
     wobbleServo = hardwareMap.get(Servo.class, "wobbleServo");
     forkServo = hardwareMap.get(Servo.class, "forkServo");
-//    wobbleZeroSensor = hardwareMap.get(RevTouchSensor.class,"wobbleSensor");
+    shooterServo = hardwareMap.get(Servo.class, "shooterServo");
+
+    //    wobbleZeroSensor = hardwareMap.get(RevTouchSensor.class,"wobbleSensor");
     
     wobbleMotor = (DcMotorEx)hardwareMap.get(DcMotor.class, "wobbleMotor");
     wobbleMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -48,6 +53,14 @@ public class ManipulatorPlatform
     wobbleMotor.setTargetPosition(0);
     wobbleMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     wobbleMotor.setPower(1);
+
+    shooterMotor = (DcMotorEx)hardwareMap.get(DcMotor.class, "shooterMotor");
+    shooterMotor.setDirection(DcMotor.Direction.FORWARD);
+  //  PIDFCoefficients wobblePIDNew = new PIDFCoefficients( wobbleP, wobbleI, wobbleD, wobbleF );
+  //  shooterMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,wobblePIDNew);
+    shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    // shooterMotor.setPower(1);
+    shooterMotor.setVelocity(0,DEGREES);
 
   }
 
@@ -67,6 +80,18 @@ public class ManipulatorPlatform
 //    }
 //
 //  }
+
+
+  void setShooterRPM(double RPMs)
+  {
+    shooterMotor.setVelocity((RPMs * 6), DEGREES); // needs to be passed as degrees/second
+  }
+
+  double getShooterRPM()
+  {
+    return shooterMotor.getVelocity(DEGREES) / 6; // degrees/second converted to RPM
+  }
+
 
 
   void wobbleExtend(boolean position)
@@ -93,6 +118,21 @@ public class ManipulatorPlatform
       forkServo.setPosition(0);
     }
   }
+
+  void shooterExtend(boolean position)
+  {
+    if(position) // Closed (1)
+    {
+      shooterServo.setPosition(1);
+    }
+    else
+    {
+      shooterServo.setPosition(0);
+    }
+  }
+
+
+
   /*  void resetExtender()
   {
     boolean calFlag = true;

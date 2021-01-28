@@ -44,6 +44,13 @@ public class AutonomousPrimary extends LinearOpMode
   private final boolean forkExtend = true;
   private final boolean forkRetract = false;
 
+  private final boolean shooterExtend = true;
+  private final boolean shooterRetract = false;
+
+  private final double shooterSpeedFull = 500;
+  private final double shooterSpeedTolerance = 20;
+  private final double shooterSpeedStop = 0;
+
   private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Quad";
   private static final String LABEL_SECOND_ELEMENT = "Single";
@@ -335,6 +342,25 @@ public class AutonomousPrimary extends LinearOpMode
         driveChassis.autoDrive(telemetry);
       }
 
+      // turn on shooter
+      manipulatorPlatform.setShooterRPM(shooterSpeedFull);
+
+      // do for three rings
+      for (int rings = 0; rings < 3; ++rings)
+      {
+        // wait for shooter to get up to speed
+        while (opModeIsActive() && manipulatorPlatform.getShooterRPM() < (shooterSpeedFull - shooterSpeedTolerance));
+
+        manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
+
+        manipulateTimer.reset();
+        while (opModeIsActive() && manipulateTimer.time()< 2.0); // delay after shot
+        manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
+        while (opModeIsActive() && manipulateTimer.time()< 4.0); // delay after shot
+
+      }
+      // turn off shooter
+      manipulatorPlatform.setShooterRPM(shooterSpeedStop);
 
       // After driving do your manipulation.  You may need a timer based state machine but simple
       // actions can just be done inline.

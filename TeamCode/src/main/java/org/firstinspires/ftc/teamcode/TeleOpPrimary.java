@@ -27,6 +27,13 @@ TeleOpPrimary extends LinearOpMode {
   private final boolean forkExtend = true;
   private final boolean forkRetract = false;
 
+  private final boolean shooterExtend = true;
+  private final boolean shooterRetract = false;
+
+  private final double shooterSpeedFull = 500;
+  private final double shooterSpeedStop = 0;
+
+
   // private ElapsedTime runtime = new ElapsedTime();
   // a timer for the various automation activities.
   private ElapsedTime eventTimer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
@@ -99,6 +106,10 @@ TeleOpPrimary extends LinearOpMode {
         driveChassis.setSpeedScale(lowSpeed);
         goingFast = true;
       }
+
+
+
+
 
 //      // Closes the latches to drag the building platform.
 //      if (gamepad1.left_bumper) // UnLatch
@@ -229,6 +240,18 @@ TeleOpPrimary extends LinearOpMode {
       {
         manipulatorPlatform.setWobblePosition(wobbleUp);
       }
+
+
+      // provide a
+      if (gamepad1.right_trigger > 0.5 && gamepad1.left_trigger > 0.5  )  //
+      {
+        // Do something when both triggers are pressed.
+      }
+      else if (gamepad1.right_trigger < 0.5 || gamepad1.left_trigger < 0.5 )
+      {
+        // Do the other thing you do when both triggers are not held down.
+      }
+
     }
   }
 
