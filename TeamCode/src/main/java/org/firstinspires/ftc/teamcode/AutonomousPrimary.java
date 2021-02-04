@@ -47,8 +47,7 @@ public class AutonomousPrimary extends LinearOpMode
   private final boolean shooterExtend = true;
   private final boolean shooterRetract = false;
 
-  private final double shooterSpeedFull = 500;
-  private final double shooterSpeedTolerance = 20;
+  private final double shooterSpeedFull = 0.73;
   private final double shooterSpeedStop = 0;
 
   private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
@@ -123,24 +122,20 @@ public class AutonomousPrimary extends LinearOpMode
       Queue<Leg> NoRingPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.5));
       NoRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
-      NoRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      NoRingPath.add(new Leg(Leg.Mode.TURN,100, 20,0));
       NoRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
-  
+      NoRingPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      NoRingPath.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
+      
+// fix for broken code in drive chassis.  Needs to drive to finish turn.
+      NoRingPath.add(new Leg(Leg.Mode.FORWARD,50, 0,0.3));
+      NoRingPath.add(new Leg(Leg.Mode.BACKWARDS,50, 0,0.3));
   
       // These are the working paths for the OpMode
-      Queue<Leg> NoRingReturnPath1 = new LinkedList<>();
+      Queue<Leg> NoRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      NoRingReturnPath1.add(new Leg(Leg.Mode.TURN,35, 0,0));
-      NoRingReturnPath1.add(new Leg(Leg.Mode.BACKWARDS,35, 0,2));
-      NoRingReturnPath1.add(new Leg(Leg.Mode.RIGHT,35, 0,2));
-      NoRingReturnPath1.add(new Leg(Leg.Mode.FORWARD,35, 0,3));
-      
-      
-      // These are the working paths for the OpMode
-      Queue<Leg> NoRingReturnPath2 = new LinkedList<>();
-      // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      NoRingReturnPath2.add(new Leg(Leg.Mode.TURN,35, 0,0));
-      NoRingReturnPath2.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
+      NoRingReturnPath.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      NoRingReturnPath.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
       
   
       // These are the working paths for the OpMode  //Path B
@@ -148,30 +143,38 @@ public class AutonomousPrimary extends LinearOpMode
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
       Queue<Leg> SingleRingPath = new LinkedList<>();
       SingleRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
+      SingleRingPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      SingleRingPath.add(new Leg(Leg.Mode.FORWARD,5, 0,0.2));
   
       // These are the working paths for the OpMode
-      Queue<Leg> SingleRingReturnPath2 = new LinkedList<>();
+      Queue<Leg> SingleRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      SingleRingReturnPath2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.9));
-      SingleRingReturnPath2.add(new Leg(Leg.Mode.LEFT,35, 0,0.7));
-      SingleRingReturnPath2.add(new Leg(Leg.Mode.TURN,35, 0,0));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,1.9));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.LEFT,35, 0,0.7));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      SingleRingReturnPath.add(new Leg(Leg.Mode.FORWARD,5, 0,0.2));
   
       // These are the working paths for the OpMode
       Queue<Leg> QuadRingPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
       QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,1));
-      QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 20,0));
+      QuadRingPath.add(new Leg(Leg.Mode.TURN,100, 20,0));
       QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.3));
-      QuadRingPath.add(new Leg(Leg.Mode.TURN,35, 4,0));
+      QuadRingPath.add(new Leg(Leg.Mode.TURN,100, 4,0));
       QuadRingPath.add(new Leg(Leg.Mode.FORWARD,35, 0,3.5));
+      QuadRingPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      QuadRingPath.add(new Leg(Leg.Mode.FORWARD,5, 0,0.2));
   
       // These are the working paths for the OpMode
-      Queue<Leg> QuadRingReturnPath2 = new LinkedList<>();
+      Queue<Leg> QuadRingReturnPath = new LinkedList<>();
       // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
-      QuadRingReturnPath2.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3.5));
-      QuadRingReturnPath2.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
-      QuadRingReturnPath2.add(new Leg(Leg.Mode.TURN,35, 0,0));
-      
+      QuadRingReturnPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      QuadRingReturnPath.add(new Leg(Leg.Mode.BACKWARDS,35, 0,3.5));
+      QuadRingReturnPath.add(new Leg(Leg.Mode.RIGHT,35, 0,1));
+      QuadRingReturnPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
+      QuadRingReturnPath.add(new Leg(Leg.Mode.FORWARD,5, 0,0.2));
+  
   
       Queue<Leg> PathPt2 = new LinkedList<>();
       PathPt2.add(new Leg(Leg.Mode.TURN, 50, 10, 0));
@@ -275,6 +278,7 @@ public class AutonomousPrimary extends LinearOpMode
 
       if (tfod != null) {
         tfod.shutdown();
+        
       }
 
 
@@ -300,7 +304,7 @@ public class AutonomousPrimary extends LinearOpMode
         driveChassis.startPlan(NoRingPath);
       }
 
-      // TODO Need to know if there is a sensor on the fork?
+       //TODO Need to know if there is a sensor on the fork?
       manipulatorPlatform.forkExtend(forkExtend);
       manipulateTimer.reset();
 
@@ -322,45 +326,52 @@ public class AutonomousPrimary extends LinearOpMode
       // this waits for manipulateTimer to count up to allow the fork to extend before moving.
       // TODO may be able to remove this wait if TFOD takes time to find objects.
       while (opModeIsActive() && manipulateTimer.time()< 1.0);
-
-
+  
+      // turn on shooter
+      manipulatorPlatform.setShooterRPM(shooterSpeedFull);
+  
+      // do for three rings
+      for (int rings = 0; rings < 3; ++rings)
+      {
+        // wait for shooter to get up to speed
+        manipulateTimer.reset();
+        while (opModeIsActive() && manipulateTimer.time()< 1.5);
+    
+        manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
+    
+        manipulateTimer.reset();
+        while (opModeIsActive() && manipulateTimer.time() < 1.0); // delay after shot
+        manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
+        
+      }
+      // turn off shooter
+      manipulatorPlatform.setShooterRPM(shooterSpeedStop);
+      
       // drive the back path
       if(ringCount == objectCount.SINGLE)
       {
-        driveChassis.startPlan(SingleRingReturnPath2);
+        driveChassis.startPlan(SingleRingReturnPath);
       }
       else if(ringCount == objectCount.QUAD)
       {
-        driveChassis.startPlan(QuadRingReturnPath2);
+        driveChassis.startPlan(QuadRingReturnPath);
       }
       else // no rings
       {
-        driveChassis.startPlan(NoRingReturnPath2);
+        driveChassis.startPlan(NoRingReturnPath);
       }
       while (opModeIsActive() && driveChassis.isDriving())
       {
         driveChassis.autoDrive(telemetry);
       }
 
-      // turn on shooter
-      manipulatorPlatform.setShooterRPM(shooterSpeedFull);
-
-      // do for three rings
-      for (int rings = 0; rings < 3; ++rings)
+      while (opModeIsActive() && driveChassis.isDriving())
       {
-        // wait for shooter to get up to speed
-        while (opModeIsActive() && manipulatorPlatform.getShooterRPM() < (shooterSpeedFull - shooterSpeedTolerance));
-
-        manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
-
-        manipulateTimer.reset();
-        while (opModeIsActive() && manipulateTimer.time()< 2.0); // delay after shot
-        manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
-        while (opModeIsActive() && manipulateTimer.time()< 4.0); // delay after shot
-
+          // Process the drive chassis
+          driveChassis.autoDrive(telemetry);
       }
-      // turn off shooter
-      manipulatorPlatform.setShooterRPM(shooterSpeedStop);
+
+
 
       // After driving do your manipulation.  You may need a timer based state machine but simple
       // actions can just be done inline.
@@ -368,8 +379,8 @@ public class AutonomousPrimary extends LinearOpMode
       // Do some manipulation...
 
       // spin for a second to allow whatever to finish (example of wait timer).
-//        manipulateimer.reset();
-//        while (opModeIsActive() && manipulateimer.time()< 1.0);
+//        manipulateTimer.reset();
+//        while (opModeIsActive() && manipulateTimer.time()< 1.0);
 //
 //        // do second part of drive plan.
 //        driveChassis.startPlan(PathPt2);
@@ -378,15 +389,14 @@ public class AutonomousPrimary extends LinearOpMode
 //            // Process the drive chassis
 //            driveChassis.autoDrive(telemetry);
 //        }
-
-        // After driving do your manipulation.  You may need a timer based state machine but simple
+       // After driving do your manipulation.  You may need a timer based state machine but simple
         // actions can just be done inline.
 
         // Do some manipulation...
 
         // spin for a second to allow whatever to finish (example of wait timer).
-//        manipulateimer.reset();
-//        while (opModeIsActive() && manipulateimer.time()< 1.0);
+//        manipulateTimer.reset();
+//        while (opModeIsActive() && manipulateTimer.time()< 1.0);
 //
 //        // do third part of drive plan.
 //        driveChassis.startPlan(PathPt3);
@@ -412,7 +422,7 @@ public class AutonomousPrimary extends LinearOpMode
     int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
         "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
-//    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+    // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
 
@@ -439,7 +449,7 @@ public class AutonomousPrimary extends LinearOpMode
     // TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
 
     // set the minimumConfidence to a higher percentage to be more selective when identifying objects.
-//    tfodParameters.minimumConfidence = 0.45;
+    tfodParameters.minimumConfidence = 0.45;
 
     tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
     tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);

@@ -55,12 +55,13 @@ public class ManipulatorPlatform
     wobbleMotor.setPower(1);
 
     shooterMotor = (DcMotorEx)hardwareMap.get(DcMotor.class, "shooterMotor");
-    shooterMotor.setDirection(DcMotor.Direction.FORWARD);
+    shooterMotor.setDirection(DcMotor.Direction.REVERSE);
+    shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
   //  PIDFCoefficients wobblePIDNew = new PIDFCoefficients( wobbleP, wobbleI, wobbleD, wobbleF );
   //  shooterMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,wobblePIDNew);
-    shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    // shooterMotor.setPower(1);
-    shooterMotor.setVelocity(0,DEGREES);
+  //  shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    shooterMotor.setPower(0);
+  //  shooterMotor.setVelocity(0,DEGREES);
 
   }
 
@@ -84,13 +85,13 @@ public class ManipulatorPlatform
 
   void setShooterRPM(double RPMs)
   {
-    shooterMotor.setVelocity((RPMs * 6), DEGREES); // needs to be passed as degrees/second
+    shooterMotor.setPower(RPMs);
   }
 
-  double getShooterRPM()
-  {
-    return shooterMotor.getVelocity(DEGREES) / 6; // degrees/second converted to RPM
-  }
+//  double getShooterRPM()
+//  {
+//   return shooterMotor.getVelocity(DEGREES) / 6; // degrees/second converted to RPM
+//  }
 
 
 

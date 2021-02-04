@@ -106,7 +106,7 @@ public class MecanumDriveChassis
     rightFrontDrive = hardwareMap.get(DcMotor.class, "rFront");
     rightRearDrive = hardwareMap.get(DcMotor.class, "rRear");
 
-    // Get and initialize the IMU. (we will use the imu on hub id = 3)
+    // Get and initialize the IMU.
     imu = hardwareMap.get(BNO055IMU.class, "imu");
 
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
