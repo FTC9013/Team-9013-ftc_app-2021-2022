@@ -402,7 +402,7 @@ public class MecanumDriveChassis
   // Must be called from the opmode to initiate a drive plan
   void startPlan(Queue<Leg> newPlan )
   {
-    if( newPlan.size() !=0 )
+    if( newPlan.size() !=0 && !drivingAPlan )
     {
       this.plan = newPlan;
       drivingAPlan = true;

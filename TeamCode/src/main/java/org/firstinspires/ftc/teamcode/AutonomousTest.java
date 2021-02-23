@@ -16,10 +16,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-@Autonomous(name = "Auto Primary", group = "Linear Opmode")
+@Autonomous(name = "Auto Test", group = "Linear Opmode")
 
 //@Disabled
-public class AutonomousPrimary extends LinearOpMode
+public class AutonomousTest extends LinearOpMode
 {
   
   // Declare OpMode members.
@@ -122,12 +122,11 @@ public class AutonomousPrimary extends LinearOpMode
     NoRingPath.add(new Leg(Leg.Mode.FORWARD, 70, 0, 1));
     NoRingPath.add(new Leg(Leg.Mode.TURN, 100, 25, 0));
     NoRingPath.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1));
-    
+  
     Queue<Leg> NoRingShootingPath = new LinkedList<>();
-    NoRingShootingPath.add(new Leg(Leg.Mode.BACKWARDS, 100, 0, 0.5));
-    NoRingShootingPath.add(new Leg(Leg.Mode.TURN, 100, 10, 0));
-    NoRingShootingPath.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.3));
+    NoRingShootingPath.add(new Leg(Leg.Mode.BACKWARDS, 100, 0, 0.2));
     NoRingShootingPath.add(new Leg(Leg.Mode.TURN, 100, 0, 0));
+    NoRingShootingPath.add(new Leg(Leg.Mode.RIGHT, 100, 0, 0.7));
     
     Queue<Leg> NoRingReturnPath = new LinkedList<>();
     NoRingReturnPath.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.3));
@@ -137,26 +136,26 @@ public class AutonomousPrimary extends LinearOpMode
     SingleRingPath.add(new Leg(Leg.Mode.FORWARD,70, 0,3.0));
     SingleRingPath.add(new Leg(Leg.Mode.TURN,100, 0,0));
     SingleRingPath.add(new Leg(Leg.Mode.FORWARD,70, 0,0.1));
-    
+  
     Queue<Leg> SingleRingShootingPath = new LinkedList<>();
     SingleRingShootingPath.add(new Leg(Leg.Mode.BACKWARDS,50, 0,1.5));
-    
+  
     // These are the working paths for the OpMode
     Queue<Leg> SingleRingReturnPath = new LinkedList<>();
     // PathPt1.add(new Leg(Leg.Mode.FORWARD,35, 0,6.0));
     SingleRingReturnPath.add(new Leg(Leg.Mode.FORWARD,70, 0,0.65));
     
-    
+  
     Queue<Leg> QuadRingPath = new LinkedList<>();
     QuadRingPath.add(new Leg(Leg.Mode.FORWARD, 70, 0, 2.5));
     QuadRingPath.add(new Leg(Leg.Mode.TURN, 100, 25, 0));
     QuadRingPath.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1));
-    
+  
     Queue<Leg> QuadRingShootingPath = new LinkedList<>();
     QuadRingShootingPath.add(new Leg(Leg.Mode.BACKWARDS, 100, 0, 0.8));
     QuadRingShootingPath.add(new Leg(Leg.Mode.TURN, 100, 0, 0));
     QuadRingShootingPath.add(new Leg(Leg.Mode.BACKWARDS, 100, 0, 0.6));
-    
+
     Queue<Leg> QuadRingReturnPath = new LinkedList<>();
     QuadRingReturnPath.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.35));
     
@@ -251,6 +250,7 @@ public class AutonomousPrimary extends LinearOpMode
       tfod.shutdown();
       
     }
+  
     
     
     // for each piece of the drive & manipulate plan you will need to load a plan and then put
@@ -260,20 +260,7 @@ public class AutonomousPrimary extends LinearOpMode
     // If you need more driving load another plan and make another loop.
     
     // potentially do manipulation here.  Make sure it is done before moving on.
-    
-    // drive the object path
-    if(ringCount == objectCount.SINGLE)
-    {
-      driveChassis.startPlan(NoRingPath);
-    }
-    else if(ringCount == objectCount.QUAD)
-    {
-      driveChassis.startPlan(NoRingPath);
-    }
-    else // no rings
-    {
-      driveChassis.startPlan(NoRingPath);
-    }
+
     
     //TODO Need to know if there is a sensor on the fork?
     manipulatorPlatform.forkExtend(forkExtend);
@@ -283,114 +270,114 @@ public class AutonomousPrimary extends LinearOpMode
     // this waits for manipulateTimer to count up to allow the fork to extend before moving.
     // TODO may be able to remove this wait if TFOD takes time to find objects.
     while (opModeIsActive() && manipulateTimer.time()< 1.0);
+  
+  
+    // drive the object path
+    if(ringCount == objectCount.SINGLE)
+    {
+      driveChassis.startPlan(SingleRingPath);
+    }
+    else if(ringCount == objectCount.QUAD)
+    {
+      driveChassis.startPlan(QuadRingPath);
+    }
+    else // no rings
+    {
+      driveChassis.startPlan(NoRingPath);
+    }
     
     while (opModeIsActive() && driveChassis.isDriving())
     {
-      
       driveChassis.autoDrive(telemetry);
     }
     
     // TODO Need to know if there is a sensor on the fork?
     manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 1.0);
+    while (opModeIsActive() && manipulateTimer.time()< 1.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
     
     manipulatorPlatform.forkExtend(forkRetract);
     
     manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 1.0);
-    
-    
-    if(ringCount == objectCount.SINGLE)
+    while (opModeIsActive() && manipulateTimer.time()< 1.0)
     {
-      driveChassis.startPlan(NoRingShootingPath);
-    }
-    else if(ringCount == objectCount.QUAD)
-    {
-      driveChassis.startPlan(NoRingShootingPath);
-    }
-    else // no rings
-    {
-      driveChassis.startPlan(NoRingShootingPath);
-    }
-    
-    
-    while (opModeIsActive() && driveChassis.isDriving())
-    {
-      
       driveChassis.autoDrive(telemetry);
     }
     
     
+    if(ringCount == objectCount.SINGLE)
+    {
+      driveChassis.startPlan(SingleRingShootingPath);
+    }
+    else if(ringCount == objectCount.QUAD)
+    {
+      driveChassis.startPlan(QuadRingShootingPath);
+    }
+    else // no rings
+    {
+      driveChassis.startPlan(NoRingShootingPath);
+    }
+    
+     while (opModeIsActive() && driveChassis.isDriving())
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+    
+    // wait for motion to stop before shooting
     manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time() < 1.5)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
     
-    // this waits for manipulateTimer to count up to allow the fork to extend before moving.
-    // TODO may be able to remove this wait if TFOD takes time to find objects.
-    while (opModeIsActive() && manipulateTimer.time()< 1.0);
-    
-    // turn on shooter
-    
-    
+  
     // do for three rings
+    for(int i=0; i<4; ++i)
     {
       manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
-      
+  
       manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time() < 0.5); // delay after shot
+      while (opModeIsActive() && manipulateTimer.time() < 0.5) // delay after shot
+      {
+        driveChassis.autoDrive(telemetry);
+      }
       manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
-      
-      
+   
       // wait for shooter to get up to speed
       manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time()< 1.0);
-      manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
-      
-      manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time() < 0.5); // delay after shot
-      manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
-      
-      
-      // wait for shooter to get up to speed
-      manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time()< 1.0);
-      manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
-      
-      manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time() < 0.5); // delay after shot
-      manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
-      
-      
-      // wait for shooter to get up to speed
-      manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time()< 1.0);
-      manipulatorPlatform.shooterExtend(shooterExtend); // shoot the ring
-      
-      manipulateTimer.reset();
-      while (opModeIsActive() && manipulateTimer.time()< 0.5);
-      manipulatorPlatform.shooterExtend(shooterRetract); // shoot the ring
-      
+      while (opModeIsActive() && manipulateTimer.time() < 1.0)
+      {
+        driveChassis.autoDrive(telemetry);
+      }
     }
     // turn off shooter
     manipulatorPlatform.setShooterRPM(shooterSpeedStop);
     
-    
+
     manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 1.0);
+    while (opModeIsActive() && manipulateTimer.time()< 1.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
     
     // drive the back path
     if(ringCount == objectCount.SINGLE)
     {
-      driveChassis.startPlan(NoRingReturnPath);
+      driveChassis.startPlan(SingleRingReturnPath);
     }
     else if(ringCount == objectCount.QUAD)
     {
-      driveChassis.startPlan(NoRingReturnPath);
+      driveChassis.startPlan(QuadRingReturnPath);
     }
     else // no rings
     {
       driveChassis.startPlan(NoRingReturnPath);
     }
-    
-    while (opModeIsActive() && driveChassis.isDriving())
+  
+//    while (opModeIsActive() && driveChassis.isDriving())
+    while (opModeIsActive())
     {
       driveChassis.autoDrive(telemetry);
     }
@@ -471,7 +458,7 @@ public class AutonomousPrimary extends LinearOpMode
     // TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
     
     // set the minimumConfidence to a higher percentage to be more selective when identifying objects.
-    tfodParameters.minResultConfidence = (float)0.45;
+    tfodParameters.minResultConfidence = (float)0.75;
     
     tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
     tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
