@@ -3,53 +3,59 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @TeleOp(name="Primary Tele-Op", group="Linear Opmode")
 //@Disabled
 public class
-TeleOpPrimary extends LinearOpMode {
-
+TeleOpPrimary extends LinearOpMode
+{
+  
+  ColorSensor color_sensor;
   // Declare OpMode members.
   private MecanumDriveChassis driveChassis;
   private ManipulatorPlatform manipulatorPlatform;
   private LEDs leds;
-
+  
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
-
+  
   private final int wobbleUp = 315;
   private final int wobbleDown = 0;
   private final int wobbleRelease = -315;
-
+  
   private final boolean wobbleExtend = true;
   private final boolean wobbleRetract = false;
   
   private final boolean forkExtend = true;
   private final boolean forkRetract = false;
-
+  
   private final boolean shooterExtend = true;
   private final boolean shooterRetract = false;
+  
+  private final boolean leftgathererExtend = true;
+  private final boolean leftgathererRetract = false;
+  
+  private final boolean rightgathererExtend = true;
+  private final boolean rightgathererRetract = false;
 
-  private final double shooterSpeedFull = 500;
+//  private final double shooterSpeedFull = 0.73;
+//  private final double shooterSpeedStop = 0;
+  
+  private final double shooterSpeedFull = 130;
+  private final double shooterSpeedTolerance = 20;
   private final double shooterSpeedStop = 0;
-
-
+  
+  private final int gathererUp = 0;
+  private final int gathererDown = 20;
+  
+  private final boolean gathererExtend = true;
+  private final boolean gathererRetract = false;
+  //ColorSensor ColorSensorName;
+  
   // private ElapsedTime runtime = new ElapsedTime();
   // a timer for the various automation activities.
   private ElapsedTime eventTimer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
-
-  // the time to hold before allowing state change on button.
-  private final double stoneSpitRunTime = 2.5;
-  private double stoneSpitTimeoutTime = 0;  // stores the time the event should end
-  private boolean stoneSpitTimerRunning = false;
-
-  // the time to hold to allow stone to settle flat then close holder.
-  private final double stoneSettleDelayTime = 0.5;
-  private double stoneSettleDelayTimeoutTime = 0;  // stores the time the event should end
-  private boolean stoneSettleDelayTimerRunning = false;
-  private final double stoneSettleTime = 0.25;
-  private double stoneSettleTimeoutTime = 0;  // stores the time the event should end
-  private boolean stoneSettleTimerRunning = false;
 
   
   private final double colorSpeed = 10; // change colors every 10 seconds
@@ -60,6 +66,8 @@ TeleOpPrimary extends LinearOpMode {
   {
     telemetry.addData("Status", "Initialized");
     telemetry.update();
+  
+  //ColorSensorName = hardwareMap.get(ColorSensor.class, "Colorsensor");
 
     driveChassis = new MecanumDriveChassis(hardwareMap);
     manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
@@ -74,14 +82,12 @@ TeleOpPrimary extends LinearOpMode {
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
     // runtime.reset();
-
     leds.goConfetti();  // start the LEDs in confetti
 
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive())
     {
       //set up counter
-
       // steps through color sequences every 'colorSpeed' seconds.
       if ( eventTimeOut( LEDTimeoutTime ) )
       {
@@ -92,9 +98,10 @@ TeleOpPrimary extends LinearOpMode {
       // send joystick inputs to the drive chassis
       driveChassis.drive(gamepad1.left_stick_y, gamepad1.left_stick_x,
                          gamepad1.right_stick_x, telemetry);
-
+      
+      manipulatorPlatform.setShooterRPM(shooterSpeedFull);
+      
       // *** Driver controls (game pad 1)
-
       // provide a throttle capability to run the bot at one of two speeds.
       if (gamepad1.right_trigger > 0.5 && goingFast )  // Go fast
       {
@@ -106,124 +113,48 @@ TeleOpPrimary extends LinearOpMode {
         driveChassis.setSpeedScale(lowSpeed);
         goingFast = true;
       }
-
-
-
-
-
-//      // Closes the latches to drag the building platform.
-//      if (gamepad1.left_bumper) // UnLatch
-//      {
-//        manipulatorPlatform.latchPosition(true);
-//      }
-//
-//      // Open the latches that drag the building platform
-//      if (gamepad1.left_trigger > 0.5)  // Latch
-//      {
-//        manipulatorPlatform.latchPosition(false);
-//      }
-
-      // Set the gatherer motors to collect.  Lowers the gather deck to the down position.
-      // Looks for the stone to hit the limit switch then stops gathering and raises the
-      // platform.
-//      if (gamepad1.a && !suckingStones && !spittingStones)
-//      {
-//        suckingStones = true;
-//        manipulatorPlatform.extenderIn();
-//        manipulatorPlatform.gatherOn(suckStones);
-//        manipulatorPlatform.gatherDown();
-//        manipulatorPlatform.gatherHold();
-//      }
-
-//      if (suckingStones && manipulatorPlatform.stonePresent())
-//      {
-//        manipulatorPlatform.gatherOff();
-//        manipulatorPlatform.gatherUp();
-//        manipulatorPlatform.grabberRelease();
-//        manipulatorPlatform.elevatorPosition(elevatorDown);
-//        stoneSettleDelayTimerRunning = true;
-//        stoneSettleDelayTimeoutTime = eventTimer.time() + stoneSettleDelayTime;
-//        suckingStones = false;
-//      }
-
-      // wait for the gather to tip back up before settling the stone.
-//      if(stoneSettleDelayTimerRunning && eventTimeOut(stoneSettleDelayTimeoutTime))
-//      {
-//        manipulatorPlatform.gatherRelease();
-//        stoneSettleTimeoutTime = eventTimer.time() + stoneSettleTime;
-//        stoneSettleTimerRunning = true;
-//        stoneSettleDelayTimerRunning = false;
-//      }
-//
-//      // let the stone settle in the holder after gather.
-//      if(stoneSettleTimerRunning && eventTimeOut(stoneSettleTimeoutTime))
-//      {
-//        manipulatorPlatform.gatherHold();
-//        stoneSettleTimerRunning = false;
-//      }
-//
-//
-//      if (gamepad1.y)
-//      {
-//        manipulatorPlatform.gatherRelease();
-//      }
-//
-//      // Spit the gathered stones out
-//      // runs the motors in reverse for some set time then stops the motors.
-//      if (gamepad1.b && !stoneSpitTimerRunning && !spittingStones)
-//      {
-//        suckingStones = false; // cancel any stone sucking...
-//        spittingStones = true;
-//        manipulatorPlatform.gatherOn(spitStones);
-//        stoneSpitTimeoutTime = eventTimer.time() + stoneSpitRunTime;
-//        stoneSpitTimerRunning = true;
-//      }
-//
-//      // cancel the stone spiting...
-//      if(spittingStones && eventTimeOut(stoneSpitTimeoutTime))
-//      {
-//        manipulatorPlatform.gatherAbort(); // motors off and table up
-//        stoneSpitTimerRunning = false;
-//        spittingStones = false;
-//      }
-//
-//      // abort gathering or spitting
-//      if (gamepad1.x)
-//      {
-//        manipulatorPlatform.gatherAbort(); // motors off and table up
-//        suckingStones = false;
-//        spittingStones = false;
-//        stoneSpitTimerRunning = false;
-//      }
-
-
+  
+      if (gamepad1.right_bumper)
+      {
+        manipulatorPlatform.shooterExtend(shooterExtend);
+        eventTimer.reset();
+        while (opModeIsActive() && eventTimer.time() < 0.5)
+        {
+          driveChassis.autoDrive(telemetry);
+        }
+        manipulatorPlatform.shooterExtend(shooterRetract);
+      }
+      
+      
       // ***************************
       // Second seat...  controls (game pad 2)
 
 // D‐PAD – Controls
-      if (gamepad2.dpad_up)
-      {
-        manipulatorPlatform.forkExtend(forkRetract);
-      }
-  
+      
       if (gamepad2.dpad_down)
       {
         manipulatorPlatform.forkExtend(forkExtend);
       }
 
-      // Y – Pushes wobble mechanism out
       if (gamepad2.y)
       {
         manipulatorPlatform.wobbleExtend(wobbleExtend);
       }
-
-
-      // Pulls wobble mechanism in
+      
       if (gamepad2.left_bumper)
       {
         manipulatorPlatform.wobbleExtend(wobbleRetract);
       }
-
+  
+      if (gamepad2.right_bumper)
+      {
+        manipulatorPlatform.forkExtend(forkRetract);
+      }
+  
+      if (gamepad2.right_trigger > 0.5)
+      {
+        manipulatorPlatform.forkExtend(forkExtend);
+      }
 
       // X – Pushes the fork mechanism down
       if (gamepad2.b)
@@ -242,7 +173,7 @@ TeleOpPrimary extends LinearOpMode {
       }
 
 
-      // provide a
+/*      // provide a
       if (gamepad1.right_trigger > 0.5 && gamepad1.left_trigger > 0.5  )  //
       {
         // Do something when both triggers are pressed.
@@ -250,7 +181,7 @@ TeleOpPrimary extends LinearOpMode {
       else if (gamepad1.right_trigger < 0.5 || gamepad1.left_trigger < 0.5 )
       {
         // Do the other thing you do when both triggers are not held down.
-      }
+      }*/
 
     }
   }
