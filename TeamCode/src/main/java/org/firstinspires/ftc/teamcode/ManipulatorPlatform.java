@@ -148,23 +148,19 @@ public class ManipulatorPlatform
   {
     if(position) // Closed (1)
     {
-      leftgathererServo.setPosition(1);
+      leftgathererServo.setPosition(0);
     }
     else
     {
-      leftgathererServo.setPosition(0);
+      leftgathererServo.setPosition(1);
     }
-  }
-  
-  public void gathererExtend(boolean gathererRetract)
-  {
   }
   
   void rightgathererExtend(boolean position)
   {
     if(position) // Closed (1)
     {
-      rightgathererServo.setPosition(-1);
+      rightgathererServo.setPosition(1);
     }
     else
     {

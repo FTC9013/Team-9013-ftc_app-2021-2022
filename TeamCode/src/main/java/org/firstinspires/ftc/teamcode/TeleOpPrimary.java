@@ -2,16 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @TeleOp(name="Primary Tele-Op", group="Linear Opmode")
 //@Disabled
 public class
 TeleOpPrimary extends LinearOpMode
 {
-  
-  ColorSensor color_sensor;
   // Declare OpMode members.
   private MecanumDriveChassis driveChassis;
   private ManipulatorPlatform manipulatorPlatform;
@@ -46,12 +44,15 @@ TeleOpPrimary extends LinearOpMode
   private final double shooterSpeedTolerance = 20;
   private final double shooterSpeedStop = 0;
   
-  private final int gathererUp = 0;
-  private final int gathererDown = 20;
+  private final int gathererDown = 260;
+  private final int gathererUp = 25;
+  private final int gathererPartialUp = 50;
+  
+  private Servo leftgathererServo = null;
+  private Servo rightgathererServo = null;
   
   private final boolean gathererExtend = true;
   private final boolean gathererRetract = false;
-  //ColorSensor ColorSensorName;
   
   // private ElapsedTime runtime = new ElapsedTime();
   // a timer for the various automation activities.
@@ -66,8 +67,7 @@ TeleOpPrimary extends LinearOpMode
   {
     telemetry.addData("Status", "Initialized");
     telemetry.update();
-  
-  //ColorSensorName = hardwareMap.get(ColorSensor.class, "Colorsensor");
+    
 
     driveChassis = new MecanumDriveChassis(hardwareMap);
     manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
@@ -131,11 +131,34 @@ TeleOpPrimary extends LinearOpMode
 
 // D‐PAD – Controls
       
+      if (gamepad2.dpad_up)
+      {
+        manipulatorPlatform.setGathererPosition(gathererPartialUp);
+        eventTimer.reset();
+        while (opModeIsActive() && eventTimer.time() < 0.5);
+        manipulatorPlatform.setGathererPosition(gathererUp);
+      }
+  
       if (gamepad2.dpad_down)
       {
-        manipulatorPlatform.forkExtend(forkExtend);
+        manipulatorPlatform.setGathererPosition(gathererDown);
+        manipulatorPlatform.leftgathererExtend(leftgathererExtend);
+        manipulatorPlatform.rightgathererExtend(rightgathererExtend);
       }
-
+  
+      if (gamepad2.dpad_left)
+      {
+        manipulatorPlatform.leftgathererExtend(leftgathererExtend);
+        manipulatorPlatform.rightgathererExtend(rightgathererExtend);
+      }
+  
+      if (gamepad2.dpad_right)
+      {
+        manipulatorPlatform.leftgathererExtend(leftgathererRetract);
+        manipulatorPlatform.rightgathererExtend(rightgathererRetract);
+      }
+      
+      
       if (gamepad2.y)
       {
         manipulatorPlatform.wobbleExtend(wobbleExtend);
