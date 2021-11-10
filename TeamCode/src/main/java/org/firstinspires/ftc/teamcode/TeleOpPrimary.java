@@ -7,54 +7,30 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Primary Tele-Op", group="Linear Opmode")
 //@Disabled
-public class
-TeleOpPrimary extends LinearOpMode
+public class TeleOpPrimary extends LinearOpMode
 {
   // Declare OpMode members.
   private MecanumDriveChassis driveChassis;
-  //private ManipulatorPlatform manipulatorPlatform;
+  private ManipulatorPlatform manipulatorPlatform;
   //private LEDs leds;
   
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
+  
+  private final int armGather = 0;
+  private final int armLow = 1000;
+  private final int armMid = 1600;
+  private final int armMax = 2400;
+  
+  private final double spinnerSpeedFull = 0.75;
+  private final double spinnerSpeedStop = 0;
   /*
-  private final int wobbleUp = 315;
-  private final int wobbleDown = 0;
-  private final int wobbleRelease = -315;
-  
-  private final boolean wobbleExtend = true;
-  private final boolean wobbleRetract = false;
-  
-  private final boolean forkExtend = true;
-  private final boolean forkRetract = false;
-  
-  private final boolean shooterExtend = true;
-  private final boolean shooterRetract = false;
-  
-  private final boolean leftgathererExtend = true;
-  private final boolean leftgathererRetract = false;
-  
-  private final boolean rightgathererExtend = true;
-  private final boolean rightgathererRetract = false;
-
-//  private final double shooterSpeedFull = 0.73;
-//  private final double shooterSpeedStop = 0;
-  
   private final double shooterSpeedFull = 130;
   private final double shooterSpeedTolerance = 20;
   private final double shooterSpeedStop = 0;
-  
-  private final int gathererDown = 260;
-  private final int gathererUp = 25;
-  private final int gathererPartialUp = 50;
-  
-  private Servo leftgathererServo = null;
-  private Servo rightgathererServo = null;
-  
-  private final boolean gathererExtend = true;
-  private final boolean gathererRetract = false;
   */
-  // private ElapsedTime runtime = new ElapsedTime();
+  
+  private ElapsedTime runtime = new ElapsedTime();
   // a timer for the various automation activities.
   private ElapsedTime eventTimer = new ElapsedTime(ElapsedTime.Resolution.SECONDS);
 
@@ -70,18 +46,18 @@ TeleOpPrimary extends LinearOpMode
     
 
     driveChassis = new MecanumDriveChassis(hardwareMap);
-    //manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
+    manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
     //leds = new LEDs(hardwareMap);
     //leds.goOff();
 
     // set dead zone to minimize unwanted stick input.
     //gamepad1.setJoystickDeadzone((float)0.05);
-    //manipulatorPlatform.wobbleExtend(wobbleRetract);
+    manipulatorPlatform.setArmPosition(armGather);
     boolean goingFast = false;
 
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
-    // runtime.reset();
+    runtime.reset();
     //leds.goConfetti();  // start the LEDs in confetti
 
     // run until the end of the match (driver presses STOP)
@@ -100,103 +76,73 @@ TeleOpPrimary extends LinearOpMode
       driveChassis.drive(gamepad1.left_stick_y, gamepad1.left_stick_x,
                          gamepad1.right_stick_x, telemetry);
       
-      //manipulatorPlatform.setShooterRPM(shooterSpeedFull);
-      
       // *** Driver controls (game pad 1)
       // provide a throttle capability to run the bot at one of two speeds.
-      if (gamepad1.right_trigger > 0.5 && goingFast )  // Go fast
-      {
-        driveChassis.setSpeedScale(highSpeed);
-        goingFast = false;
-      }
-      else if (gamepad1.right_trigger < 0.5 && !goingFast)
-      {
-        driveChassis.setSpeedScale(lowSpeed);
-        goingFast = true;
-      }
-  
-      if (gamepad1.right_bumper)
-      {
-        //manipulatorPlatform.shooterExtend(shooterExtend);
+        if (gamepad1.right_bumper && !goingFast)  // Go fast
+        {
+          driveChassis.setSpeedScale(highSpeed);
+          goingFast = true;
+        }
+        if (gamepad1.right_bumper && goingFast)
+        {
+          driveChassis.setSpeedScale(lowSpeed);
+          goingFast = false;
+        }
+    
+        if(gamepad1.right_trigger > 0.1)
+        {
+          manipulatorPlatform.setSpinnerRPM(gamepad1.right_trigger);
+        }
+        if(gamepad1.left_trigger > 0.1)
+        {
+          manipulatorPlatform.setSpinnerRPM(gamepad1.left_trigger);
+        }
+        /*
         eventTimer.reset();
         while (opModeIsActive() && eventTimer.time() < 0.5)
         {
           driveChassis.autoDrive(telemetry);
         }
         //manipulatorPlatform.shooterExtend(shooterRetract);
-      }
+        */
       
       
       // ***************************
       // Second seat...  controls (game pad 2)
 
 // D‐PAD – Controls
-      /*
-      if (gamepad2.dpad_up)
-      {
-        manipulatorPlatform.setGathererPosition(gathererPartialUp);
-        eventTimer.reset();
-        while (opModeIsActive() && eventTimer.time() < 0.5);
-        manipulatorPlatform.setGathererPosition(gathererUp);
-      }
-  
       if (gamepad2.dpad_down)
       {
-        manipulatorPlatform.setGathererPosition(gathererDown);
-        manipulatorPlatform.leftgathererExtend(leftgathererExtend);
-        manipulatorPlatform.rightgathererExtend(rightgathererExtend);
+        manipulatorPlatform.setArmPosition(armGather);
       }
-  
-      if (gamepad2.dpad_left)
-      {
-        manipulatorPlatform.leftgathererExtend(leftgathererExtend);
-        manipulatorPlatform.rightgathererExtend(rightgathererExtend);
-      }
-  
       if (gamepad2.dpad_right)
       {
-        manipulatorPlatform.leftgathererExtend(leftgathererRetract);
-        manipulatorPlatform.rightgathererExtend(rightgathererRetract);
+        manipulatorPlatform.setArmPosition(armLow);
+      }
+      if (gamepad2.dpad_left)
+      {
+        manipulatorPlatform.setArmPosition(armMid);
+      }
+      if (gamepad2.dpad_up)
+      {
+        manipulatorPlatform.setArmPosition(armMax);
       }
       
+  
       
-      if (gamepad2.y)
+      if(gamepad2.a)
       {
-        manipulatorPlatform.wobbleExtend(wobbleExtend);
+        manipulatorPlatform.setGatherPower(0.25);
+      }
+      if(gamepad2.y)
+      {
+        manipulatorPlatform.setGatherPower(-0.125);
+      }
+      if(gamepad2.b)
+      {
+        manipulatorPlatform.setGatherPower(0);
       }
       
-      if (gamepad2.left_bumper)
-      {
-        manipulatorPlatform.wobbleExtend(wobbleRetract);
-      }
-  
-      if (gamepad2.right_bumper)
-      {
-        manipulatorPlatform.forkExtend(forkRetract);
-      }
-  
-      if (gamepad2.right_trigger > 0.5)
-      {
-        manipulatorPlatform.forkExtend(forkExtend);
-      }
-
-      // X – Pushes the fork mechanism down
-      if (gamepad2.b)
-      {
-        manipulatorPlatform.setWobblePosition(wobbleRelease);
-      }
-  
-      if (gamepad2.a)
-      {
-        manipulatorPlatform.setWobblePosition(wobbleDown);
-      }
-
-      if (gamepad2.x)
-      {
-        manipulatorPlatform.setWobblePosition(wobbleUp);
-      }
-
-*/
 /*      // provide a
       if (gamepad1.right_trigger > 0.5 && gamepad1.left_trigger > 0.5  )  //
       {
@@ -210,12 +156,12 @@ TeleOpPrimary extends LinearOpMode
     }
   }
 
+
   // test the event time
   private boolean eventTimeOut ( double eventTime)
   {
     return eventTimer.time() > eventTime;
   }
+  
+  
 }
-
-
-
