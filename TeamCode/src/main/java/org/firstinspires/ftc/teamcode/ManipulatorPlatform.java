@@ -17,7 +17,7 @@ public class ManipulatorPlatform
   private DcMotorEx armMotor = null;
   private DcMotorEx gathererMotor = null;
   
-  static final double armP = 0;
+  static final double armP = 10;
   static final double armI = 0;
   static final double armD = 0;
   static final double armF = 0;
@@ -27,7 +27,7 @@ public class ManipulatorPlatform
   static final double gatherD = 0;
   static final double gatherF = 0;
   
-  static final double spinnerP = 0;
+  static final double spinnerP = 10;
   static final double spinnerI = 0;
   static final double spinnerD = 0;
   static final double spinnerF = 0;
@@ -55,7 +55,7 @@ public class ManipulatorPlatform
     spinnerMotor.setVelocity(0, DEGREES);
   
     gathererMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "gatherMotor");
-    gathererMotor.setDirection(DcMotor.Direction.REVERSE);
+    gathererMotor.setDirection(DcMotor.Direction.FORWARD);
     //PIDFCoefficients gathererPIDNew = new PIDFCoefficients(gatherP, gatherI, gatherD, gatherF);
     //gathererMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,gathererPIDNew);
     gathererMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
