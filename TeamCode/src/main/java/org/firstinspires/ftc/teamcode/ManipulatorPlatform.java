@@ -50,7 +50,7 @@ public class ManipulatorPlatform
     spinnerMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "spinnerMotor");
     spinnerMotor.setDirection(DcMotor.Direction.REVERSE);
     PIDFCoefficients spinnerPIDNew = new PIDFCoefficients( spinnerP, spinnerI, spinnerD, spinnerF );
-    spinnerMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION,spinnerPIDNew);
+    spinnerMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,spinnerPIDNew);
     spinnerMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     spinnerMotor.setVelocity(0, DEGREES);
   

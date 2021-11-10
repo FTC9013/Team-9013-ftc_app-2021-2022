@@ -54,12 +54,14 @@ public class TeleOpPrimary extends LinearOpMode
     //gamepad1.setJoystickDeadzone((float)0.05);
     manipulatorPlatform.setArmPosition(armGather);
     boolean goingFast = false;
+    
 
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
     runtime.reset();
     //leds.goConfetti();  // start the LEDs in confetti
-
+  
+    driveChassis.setSpeedScale(lowSpeed);
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive())
     {
@@ -89,11 +91,11 @@ public class TeleOpPrimary extends LinearOpMode
           goingFast = false;
         }
     
-        if(gamepad1.right_trigger > 0.1)
+        if(gamepad2.right_trigger > 0.1)
         {
           manipulatorPlatform.setSpinnerRPM(gamepad1.right_trigger);
         }
-        if(gamepad1.left_trigger > 0.1)
+        if(gamepad2.left_trigger > 0.1)
         {
           manipulatorPlatform.setSpinnerRPM(gamepad1.left_trigger);
         }
@@ -128,15 +130,14 @@ public class TeleOpPrimary extends LinearOpMode
         manipulatorPlatform.setArmPosition(armMax);
       }
       
-  
       
       if(gamepad2.a)
       {
-        manipulatorPlatform.setGatherPower(0.25);
+        manipulatorPlatform.setGatherPower(0.75);
       }
       if(gamepad2.y)
       {
-        manipulatorPlatform.setGatherPower(-0.125);
+        manipulatorPlatform.setGatherPower(-0.5);
       }
       if(gamepad2.b)
       {
