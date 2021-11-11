@@ -17,14 +17,14 @@ public class TeleOpPrimary extends LinearOpMode
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
   
-  private final int armGather = 0;
-  private final int armLow = 1000;
-  private final int armMid = 1600;
-  private final int armMax = 24000;
-  /*
+  private final int armGather = 30;
+  private final int armLow = 90;
+  private final int armMid = 180;
+  private final int armMax = 360;
+  
   private final double spinnerSpeedFull = 0.75;
   private final double spinnerSpeedStop = 0;
-  
+  /*
   private final double shooterSpeedFull = 130;
   private final double shooterSpeedTolerance = 20;
   private final double shooterSpeedStop = 0;
@@ -54,7 +54,7 @@ public class TeleOpPrimary extends LinearOpMode
     //gamepad1.setJoystickDeadzone((float)0.05);
     manipulatorPlatform.setArmPosition(armGather);
     boolean goingFast = false;
-    
+    boolean goingFastToggle = false;
 
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
@@ -80,24 +80,30 @@ public class TeleOpPrimary extends LinearOpMode
       
       // *** Driver controls (game pad 1)
       // provide a throttle capability to run the bot at one of two speeds.
-        if (gamepad1.right_bumper && !goingFast)  // Go fast
+        if (gamepad1.right_bumper && !goingFast && !goingFastToggle)  // Go fast
         {
           driveChassis.setSpeedScale(highSpeed);
           goingFast = true;
+          goingFastToggle = true;
         }
-        if (gamepad1.right_bumper && goingFast)
+        if (gamepad1.right_bumper && goingFast && !goingFastToggle)
         {
           driveChassis.setSpeedScale(lowSpeed);
           goingFast = false;
+          goingFastToggle = true;
+        }
+        if  (!gamepad1.right_bumper)
+        {
+          goingFastToggle = false;
         }
     
-        if(gamepad2.right_trigger > 0.1)
+        if(gamepad2.right_bumper)
         {
-          manipulatorPlatform.setSpinnerRPM(gamepad2.right_trigger);
+          manipulatorPlatform.setSpinnerPower(spinnerSpeedFull);
         }
-        if(gamepad2.left_trigger > 0.1)
+        if(gamepad2.left_bumper)
         {
-          manipulatorPlatform.setSpinnerRPM(gamepad2.left_trigger);
+          manipulatorPlatform.setSpinnerPower(-spinnerSpeedFull);
         }
         /*
         eventTimer.reset();
@@ -133,11 +139,11 @@ public class TeleOpPrimary extends LinearOpMode
       
       if(gamepad2.a)
       {
-        manipulatorPlatform.setGatherPower(0.75);
+        manipulatorPlatform.setGatherPower(0.33);
       }
       if(gamepad2.y)
       {
-        manipulatorPlatform.setGatherPower(-0.5);
+        manipulatorPlatform.setGatherPower(-0.23);
       }
       if(gamepad2.b)
       {

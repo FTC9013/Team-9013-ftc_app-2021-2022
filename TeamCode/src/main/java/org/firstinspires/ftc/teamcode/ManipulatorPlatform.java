@@ -17,7 +17,7 @@ public class ManipulatorPlatform
   private DcMotorEx armMotor = null;
   private DcMotorEx gathererMotor = null;
   
-  static final double armP = 10;
+  static final double armP = 25;
   static final double armI = 0;
   static final double armD = 0;
   static final double armF = 0;
@@ -27,7 +27,7 @@ public class ManipulatorPlatform
   static final double gatherD = 0;
   static final double gatherF = 0;
   
-  static final double spinnerP = 10;
+  static final double spinnerP = 40;
   static final double spinnerI = 0;
   static final double spinnerD = 0;
   static final double spinnerF = 0;
@@ -39,23 +39,27 @@ public class ManipulatorPlatform
     // step (using the FTC Robot Controller app on the phone).
     
     armMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "armMotor");
-    armMotor.setDirection(DcMotor.Direction.FORWARD);
+    armMotor.setDirection(DcMotor.Direction.REVERSE);
     PIDFCoefficients armPIDNew = new PIDFCoefficients(armP, armI, armD, armF);
     armMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, armPIDNew);
     armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     armMotor.setTargetPosition(0);
     armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    armMotor.setPower(1);
-    
+    armMotor.setPower(0.5);
+    /*
     spinnerMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "spinnerMotor");
     spinnerMotor.setDirection(DcMotor.Direction.REVERSE);
     PIDFCoefficients spinnerPIDNew = new PIDFCoefficients( spinnerP, spinnerI, spinnerD, spinnerF );
     spinnerMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,spinnerPIDNew);
     spinnerMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     spinnerMotor.setVelocity(0, DEGREES);
-  
+    */
+    spinnerMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "spinnerMotor");
+    spinnerMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    spinnerMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    
     gathererMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "gatherMotor");
-    gathererMotor.setDirection(DcMotor.Direction.FORWARD);
+    gathererMotor.setDirection(DcMotor.Direction.REVERSE);
     //PIDFCoefficients gathererPIDNew = new PIDFCoefficients(gatherP, gatherI, gatherD, gatherF);
     //gathererMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,gathererPIDNew);
     gathererMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -97,6 +101,11 @@ public class ManipulatorPlatform
   double getSpinnerRPM()
   {
     return spinnerMotor.getVelocity(DEGREES) / 6; // degrees/second converted to RPM
+  }
+  
+  void setSpinnerPower(double power)
+  {
+    spinnerMotor.setPower(power); // needs to be passed as degrees/second
   }
   
   void setGatherRPM(double RPMs)
