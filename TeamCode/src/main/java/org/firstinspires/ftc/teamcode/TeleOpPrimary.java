@@ -17,7 +17,7 @@ public class TeleOpPrimary extends LinearOpMode
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
   
-  private final int armGather = 30;
+  private final int armGather = 15;
   private final int armLow = 90;
   private final int armMid = 180;
   private final int armMax = 360;
@@ -100,10 +100,19 @@ public class TeleOpPrimary extends LinearOpMode
         if(gamepad2.right_bumper)
         {
           manipulatorPlatform.setSpinnerPower(spinnerSpeedFull);
+          while(gamepad2.right_bumper)
+          {
+          }
+          manipulatorPlatform.setSpinnerPower(0);
         }
         if(gamepad2.left_bumper)
         {
           manipulatorPlatform.setSpinnerPower(-spinnerSpeedFull);
+          while(gamepad2.left_bumper)
+          {
+          }
+          manipulatorPlatform.setSpinnerPower(0);
+          
         }
         /*
         eventTimer.reset();

@@ -17,7 +17,7 @@ public class ManipulatorPlatform
   private DcMotorEx armMotor = null;
   private DcMotorEx gathererMotor = null;
   
-  static final double armP = 25;
+  static final double armP = 30;
   static final double armI = 0;
   static final double armD = 0;
   static final double armF = 0;
@@ -102,6 +102,7 @@ public class ManipulatorPlatform
   {
     return spinnerMotor.getVelocity(DEGREES) / 6; // degrees/second converted to RPM
   }
+
   
   void setSpinnerPower(double power)
   {
