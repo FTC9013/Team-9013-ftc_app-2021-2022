@@ -107,10 +107,11 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToDuckSpinner = new LinkedList<>();
-    MoveToDuckSpinner.add(new Leg(Leg.Mode.RIGHT, 75, 0, 1.2));
+    MoveToDuckSpinner.add(new Leg(Leg.Mode.RIGHT, 75, 0, 1.15));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 75, 0, 0.7));
-    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 75, 0, 0.2));
+    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 50, 0, 1.2));
+    MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
+    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 50, 0, 0.5));
     
     // Wait for the game to start (driver presses PLAY)
     

@@ -17,6 +17,8 @@ public class ManipulatorPlatform
   private DcMotorEx armMotor = null;
   private DcMotorEx gathererMotor = null;
   
+  private Servo gatherDrop = null;
+  
   static final double armP = 30;
   static final double armI = 0;
   static final double armD = 0;
@@ -63,6 +65,10 @@ public class ManipulatorPlatform
     //PIDFCoefficients gathererPIDNew = new PIDFCoefficients(gatherP, gatherI, gatherD, gatherF);
     //gathererMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,gathererPIDNew);
     gathererMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  
+    gatherDrop = hardwareMap.get(Servo.class,"gatherDrop");
+    
+    
   }
   
   void setArmPosition(int count)
@@ -124,7 +130,10 @@ public class ManipulatorPlatform
     return gathererMotor.getVelocity(DEGREES) / 6; // degrees/second converted to RPM
   }
   
-  
+  void invertGatherDropper()
+  {
+    gatherDrop.setPosition(1 - gatherDrop.getPosition());
+  }
 
   /*  void resetExtender()
   {

@@ -24,6 +24,9 @@ public class TeleOpPrimary extends LinearOpMode
   
   private final double spinnerSpeedFull = 0.75;
   private final double spinnerSpeedStop = 0;
+  
+  private boolean duckSpinning = false;
+  
   /*
   private final double shooterSpeedFull = 130;
   private final double shooterSpeedTolerance = 20;
@@ -112,8 +115,10 @@ public class TeleOpPrimary extends LinearOpMode
           {
           }
           manipulatorPlatform.setSpinnerPower(0);
-          
         }
+        
+        
+        
         /*
         eventTimer.reset();
         while (opModeIsActive() && eventTimer.time() < 0.5)
@@ -158,7 +163,10 @@ public class TeleOpPrimary extends LinearOpMode
       {
         manipulatorPlatform.setGatherPower(0);
       }
-      
+      if(gamepad2.x)
+      {
+        manipulatorPlatform.invertGatherDropper();
+      }
 /*      // provide a
       if (gamepad1.right_trigger > 0.5 && gamepad1.left_trigger > 0.5  )  //
       {
