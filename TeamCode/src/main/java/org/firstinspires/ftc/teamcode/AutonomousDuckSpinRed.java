@@ -111,7 +111,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     MoveToDuckSpinner.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.5));
     MoveToDuckSpinner.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 1.25));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.2));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.75));
     MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
     MoveToParkSpot.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 0.6));
     
@@ -140,6 +140,30 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     }
     
     waitForStart();
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
     
     //Sets arm gatherer position to low
     manipulatorPlatform.setArmPosition(armGather);
@@ -150,6 +174,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     // If you need more driving load another plan and make another loop.
     
     // potentially do manipulation here.  Make sure it is done before moving on.
+  
     
     driveChassis.startPlan(MoveToDuckSpinner);
     
@@ -158,7 +183,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
       driveChassis.autoDrive(telemetry);
     }
   
-    manipulatorPlatform.setSpinnerPower(spinnerSpeedFull);
+    manipulatorPlatform.setSpinnerPower(-spinnerSpeedFull);
     manipulateTimer.reset();
     while (opModeIsActive() && manipulateTimer.time()< 5.0)
     {
@@ -172,6 +197,9 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     {
       driveChassis.autoDrive(telemetry);
     }
+  
+
+    
     
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
