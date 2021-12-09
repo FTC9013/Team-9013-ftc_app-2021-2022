@@ -45,7 +45,7 @@ public class AutonomousParkLazyBlue extends LinearOpMode
   private final boolean shooterExtend = true;
   private final boolean shooterRetract = false;
   
-  private final double spinnerSpeedFull = 0.75;
+  private final double spinnerSpeedFull = 0.70;
   private final double spinnerSpeedStop = 0;
   
   private final double shooterSpeedFull = 128;
@@ -164,8 +164,10 @@ public class AutonomousParkLazyBlue extends LinearOpMode
       driveChassis.autoDrive(telemetry);
     }
     
-    manipulatorPlatform.setArmPosition(0);
-    
+    manipulatorPlatform.setArmPosition(5);
+    manipulatorPlatform.setArmPosition(15);
+  
+  
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
     

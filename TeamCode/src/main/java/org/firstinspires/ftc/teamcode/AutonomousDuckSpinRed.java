@@ -14,10 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-@Autonomous(name = "AutonomousDuckSpinBlue", group = "Linear Opmode")
+@Autonomous(name = "AutonomousDuckSpinRed", group = "Linear Opmode")
 
 //@Disabled
-public class AutonomousDuckSpinBlue extends LinearOpMode
+public class AutonomousDuckSpinRed extends LinearOpMode
 {
   
   // Declare OpMode members.
@@ -108,11 +108,12 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToDuckSpinner = new LinkedList<>();
-    MoveToDuckSpinner.add(new Leg(Leg.Mode.RIGHT, 75, 0, 1.25));
+    MoveToDuckSpinner.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.5));
+    MoveToDuckSpinner.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 1.25));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 50, 0, 1.2));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.2));
     MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
-    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 50, 0, 0.6));
+    MoveToParkSpot.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 0.6));
     
     // Wait for the game to start (driver presses PLAY)
     

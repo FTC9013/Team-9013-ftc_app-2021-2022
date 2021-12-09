@@ -17,12 +17,12 @@ public class TeleOpPrimary extends LinearOpMode
   private final double highSpeed = 1.0;
   private final double lowSpeed = 0.5;
   
-  private final int armGather = 15;
+  private final int armGather = 0;
   private final int armLow = 90;
   private final int armMid = 180;
   private final int armMax = 360;
   
-  private final double spinnerSpeedFull = 0.75;
+  private final double spinnerSpeedFull = 0.8;
   private final double spinnerSpeedStop = 0;
   
   private boolean duckSpinning = false;

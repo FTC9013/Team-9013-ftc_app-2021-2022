@@ -7,17 +7,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Leg;
+import org.firstinspires.ftc.teamcode.ManipulatorPlatform;
+import org.firstinspires.ftc.teamcode.MecanumDriveChassis;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
-@Autonomous(name = "AutonomousDuckSpinBlue", group = "Linear Opmode")
+@Autonomous(name = "AutonomousParkLazyRed", group = "Linear Opmode")
 
 //@Disabled
-public class AutonomousDuckSpinBlue extends LinearOpMode
+public class AutonomousParkLazyRed extends LinearOpMode
 {
   
   // Declare OpMode members.
@@ -34,22 +35,31 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
   
   private boolean extendedFlag = false;
   
+  private final int extenderRetracted  = 0;
+  private final int extenderExtended  = 700;
+  
   private final float searchTime = 5;  // sets the time (Seconds) to search for rings before declaring NONE.
   
-  private final double spinnerSpeedFull = 0.8
-    ;
+  private final boolean forkExtend = true;
+  private final boolean forkRetract = false;
+  
+  private final boolean shooterExtend = true;
+  private final boolean shooterRetract = false;
+  
+  private final double spinnerSpeedFull = 0.70;
   private final double spinnerSpeedStop = 0;
   
-  private final int armGather = 15;
+  private final double shooterSpeedFull = 128;
+  private final double shooterSpeedTolerance = 20;
+  private final double shooterSpeedStop = 0;
   
-  private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
-  private static final String LABEL_FIRST_ELEMENT = "Duck";
-  private static final String LABEL_SECOND_ELEMENT = "Marker";
   
-  //private enum duckPosition { UNKNOWN, LEFT, CENTER, RIGHT }
-  //private duckPosition duckPos = duckPosition.UNKNOWN;
+  private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
+  private static final String LABEL_FIRST_ELEMENT = "Quad";
+  private static final String LABEL_SECOND_ELEMENT = "Single";
   
-  private boolean duckExist;
+  private enum objectCount { UNKNOWN, SINGLE, QUAD, NONE }
+  private objectCount ringCount = objectCount.UNKNOWN;
   
   /**
    * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -107,13 +117,10 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     
     
     // These are the working paths for the OpMode
-    Queue<Leg> MoveToDuckSpinner = new LinkedList<>();
-    MoveToDuckSpinner.add(new Leg(Leg.Mode.RIGHT, 75, 0, 1.25));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 50, 0, 1.2));
-    MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
-    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 50, 0, 0.6));
+    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 100, 0, 1.75));
     
+
     // Wait for the game to start (driver presses PLAY)
     
     // Initialize the vision objects
@@ -140,8 +147,7 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     
     waitForStart();
     
-    //Sets arm gatherer position to low
-    manipulatorPlatform.setArmPosition(armGather);
+    
     // for each piece of the drive & manipulate plan you will need to load a plan and then put
     // a while loop, like the following example, that repeatedly calls the autoDrive method
     // until the driving is done.
@@ -149,21 +155,8 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     // If you need more driving load another plan and make another loop.
     
     // potentially do manipulation here.  Make sure it is done before moving on.
-    
-    driveChassis.startPlan(MoveToDuckSpinner);
-    
-    while (opModeIsActive() && driveChassis.isDriving())
-    {
-      driveChassis.autoDrive(telemetry);
-    }
   
-    manipulatorPlatform.setSpinnerPower(spinnerSpeedFull);
-    manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 5.0)
-    {
-      driveChassis.autoDrive(telemetry);
-    }
-    manipulatorPlatform.setSpinnerPower(spinnerSpeedStop);
+    manipulatorPlatform.setArmPosition(180);
     
     driveChassis.startPlan(MoveToParkSpot);
   
@@ -172,6 +165,10 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
       driveChassis.autoDrive(telemetry);
     }
     
+    manipulatorPlatform.setArmPosition(5);
+    manipulatorPlatform.setArmPosition(15);
+  
+  
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
     
@@ -253,71 +250,4 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
     tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
   }
-  
-  void checkForDuck(String currentPos)
-  {
-    if (opModeIsActive())
-    {
-      manipulateTimer.reset(); // time search for rings
-      while (opModeIsActive() && duckExist == false)
-      {
-        if (tfod != null)
-        {
-          // getUpdatedRecognitions() will return null if no new information is available since
-          // the last time that call was made.
-          List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-          if (updatedRecognitions != null)
-          {
-            telemetry.addData("# Object Detected", updatedRecognitions.size());
-            if (updatedRecognitions.size() == 0)
-            {
-              // empty list.  no objects recognized.
-              telemetry.addData("TFOD", "No items detected.");
-              telemetry.addData("Target Zone", "Bottom");
-            } else
-            {
-              // list is not empty.
-              
-              // step through the list of recognitions and display boundary info.
-              int i = 0;
-              for (Recognition recognition : updatedRecognitions)
-              {
-                telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                  recognition.getLeft(), recognition.getTop());
-                telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                  recognition.getRight(), recognition.getBottom());
-                
-                
-                // check label to see which target zone to go after.
-                if (recognition.getLabel().equals("Duck"))
-                {
-                  telemetry.addData("Target Zone", currentPos);
-                  duckExist = true;
-                }
-                else
-                {
-                  telemetry.addData("Target Zone", "UNKNOWN");
-                }
-              }
-            }
-            telemetry.update();
-          }
-        }
-        // Check timer. If expired then no duck
-        if (manipulateTimer.time() > searchTime)
-        {
-          duckExist = false;
-        }
-      }
-    }
-    
-    if (tfod != null)
-    {
-      tfod.shutdown();
-      
-    }
-  }
-  
-  
 }
