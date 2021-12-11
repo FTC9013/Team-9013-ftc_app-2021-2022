@@ -111,7 +111,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     MoveToDuckSpinner.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.5));
     MoveToDuckSpinner.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 1.25));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.75));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.5));
     MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
     MoveToParkSpot.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 0.6));
     
@@ -141,30 +141,32 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     
     waitForStart();
   
-    manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 3.0)
-    {
-      driveChassis.autoDrive(telemetry);
-    }
-  
-    manipulatorPlatform.invertGatherDropper();
-  
-    manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 3.0)
-    {
-      driveChassis.autoDrive(telemetry);
-    }
-  
-    manipulatorPlatform.invertGatherDropper();
-  
-    manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 3.0)
-    {
-      driveChassis.autoDrive(telemetry);
-    }
-  
-    manipulatorPlatform.invertGatherDropper();
+    manipulatorPlatform.initGatherDropper();
     
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
+  /*
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
+    */
     //Sets arm gatherer position to low
     manipulatorPlatform.setArmPosition(armGather);
     // for each piece of the drive & manipulate plan you will need to load a plan and then put

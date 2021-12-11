@@ -139,6 +139,16 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     }
     
     waitForStart();
+  
+    manipulatorPlatform.initGatherDropper();
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
     
     //Sets arm gatherer position to low
     manipulatorPlatform.setArmPosition(armGather);

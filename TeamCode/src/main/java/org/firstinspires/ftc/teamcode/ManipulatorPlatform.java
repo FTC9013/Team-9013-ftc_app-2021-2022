@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -33,6 +34,10 @@ public class ManipulatorPlatform
   static final double spinnerI = 0;
   static final double spinnerD = 0;
   static final double spinnerF = 0;
+  
+  private ColorSensor colorSensorL = null;
+  private ColorSensor colorSensorR = null;
+  
   
   ManipulatorPlatform(HardwareMap hardwareMap)
   {
@@ -68,6 +73,8 @@ public class ManipulatorPlatform
   
     gatherDrop = hardwareMap.get(Servo.class,"gatherDrop");
     
+    //colorSensorL = hardwareMap.get(ColorSensor.class, "leftSensor");
+    //colorSensorR = hardwareMap.get(ColorSensor.class, "rightSensor");
     
   }
   
@@ -133,6 +140,11 @@ public class ManipulatorPlatform
   void invertGatherDropper()
   {
     gatherDrop.setPosition(1 - gatherDrop.getPosition());
+  }
+  
+  void initGatherDropper()
+  {
+    gatherDrop.setPosition(0);
   }
 
   /*  void resetExtender()

@@ -20,7 +20,7 @@ public class TeleOpPrimary extends LinearOpMode
   private final int armGather = 0;
   private final int armLow = 90;
   private final int armMid = 180;
-  private final int armMax = 360;
+  private final int armMax = 380;
   
   private final double spinnerSpeedFull = 0.8;
   private final double spinnerSpeedStop = 0;

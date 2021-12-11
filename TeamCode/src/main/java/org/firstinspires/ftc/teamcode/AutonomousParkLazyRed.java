@@ -156,6 +156,16 @@ public class AutonomousParkLazyRed extends LinearOpMode
     
     // potentially do manipulation here.  Make sure it is done before moving on.
   
+    manipulatorPlatform.initGatherDropper();
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+  
+    manipulatorPlatform.invertGatherDropper();
+    
     manipulatorPlatform.setArmPosition(180);
     
     driveChassis.startPlan(MoveToParkSpot);
