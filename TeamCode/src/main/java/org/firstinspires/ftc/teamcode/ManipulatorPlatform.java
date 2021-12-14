@@ -20,6 +20,9 @@ public class ManipulatorPlatform
   
   private Servo gatherDrop = null;
   
+  private ColorSensor colorSensorL = null;
+  private ColorSensor colorSensorR = null;
+  
   static final double armP = 30;
   static final double armI = 0;
   static final double armD = 0;
@@ -35,9 +38,16 @@ public class ManipulatorPlatform
   static final double spinnerD = 0;
   static final double spinnerF = 0;
   
-  private ColorSensor colorSensorL = null;
-  private ColorSensor colorSensorR = null;
+  public final double highSpeed = 1.0;
+  public final double lowSpeed = 0.5;
   
+  public final int armGather = 0;
+  public final int armLow = 468;
+  public final int armMid = 936;
+  public final int armMax = 1976;
+  
+  public final double spinnerSpeedFull = 0.8;
+  public final double spinnerSpeedStop = 0;
   
   ManipulatorPlatform(HardwareMap hardwareMap)
   {
@@ -119,7 +129,12 @@ public class ManipulatorPlatform
   
   void setSpinnerPower(double power)
   {
-    spinnerMotor.setPower(power); // needs to be passed as degrees/second
+    spinnerMotor.setPower(power);
+  }
+  
+  double getSpinnerPower()
+  {
+    return spinnerMotor.getPower();
   }
   
   void setGatherRPM(double RPMs)

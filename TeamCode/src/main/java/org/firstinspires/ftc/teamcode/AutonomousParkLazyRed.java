@@ -165,8 +165,8 @@ public class AutonomousParkLazyRed extends LinearOpMode
     }
   
     manipulatorPlatform.invertGatherDropper();
-    
-    manipulatorPlatform.setArmPosition(180);
+  
+    manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
     
     driveChassis.startPlan(MoveToParkSpot);
   
@@ -174,9 +174,8 @@ public class AutonomousParkLazyRed extends LinearOpMode
     {
       driveChassis.autoDrive(telemetry);
     }
-    
-    manipulatorPlatform.setArmPosition(5);
-    manipulatorPlatform.setArmPosition(15);
+  
+    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+5);
   
   
     // After driving do your manipulation.  You may need a timer based state machine but simple

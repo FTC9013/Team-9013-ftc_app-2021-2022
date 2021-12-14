@@ -14,18 +14,7 @@ public class TeleOpPrimary extends LinearOpMode
   private ManipulatorPlatform manipulatorPlatform;
   //private LEDs leds;
   
-  private final double highSpeed = 1.0;
-  private final double lowSpeed = 0.5;
-  
-  private final int armGather = 0;
-  private final int armLow = 90;
-  private final int armMid = 180;
-  private final int armMax = 380;
-  
-  private final double spinnerSpeedFull = 0.8;
-  private final double spinnerSpeedStop = 0;
-  
-  private boolean duckSpinning = false;
+
   
   /*
   private final double shooterSpeedFull = 130;
@@ -55,16 +44,18 @@ public class TeleOpPrimary extends LinearOpMode
 
     // set dead zone to minimize unwanted stick input.
     //gamepad1.setJoystickDeadzone((float)0.05);
-    manipulatorPlatform.setArmPosition(armGather);
+    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather);
     boolean goingFast = false;
     boolean goingFastToggle = false;
-
+  
+    boolean isSpinning = false;
+    
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
     runtime.reset();
     //leds.goConfetti();  // start the LEDs in confetti
   
-    driveChassis.setSpeedScale(lowSpeed);
+    driveChassis.setSpeedScale(manipulatorPlatform.lowSpeed);
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive())
     {
@@ -85,37 +76,55 @@ public class TeleOpPrimary extends LinearOpMode
       // provide a throttle capability to run the bot at one of two speeds.
         if (gamepad1.right_bumper && !goingFast && !goingFastToggle)  // Go fast
         {
-          driveChassis.setSpeedScale(highSpeed);
+          driveChassis.setSpeedScale(manipulatorPlatform.highSpeed);
           goingFast = true;
           goingFastToggle = true;
         }
         if (gamepad1.right_bumper && goingFast && !goingFastToggle)
         {
-          driveChassis.setSpeedScale(lowSpeed);
+          driveChassis.setSpeedScale(manipulatorPlatform.lowSpeed);
           goingFast = false;
           goingFastToggle = true;
         }
+        
         if  (!gamepad1.right_bumper)
         {
           goingFastToggle = false;
         }
     
-        if(gamepad2.right_bumper)
+        if(gamepad2.right_bumper && !isSpinning)
         {
-          manipulatorPlatform.setSpinnerPower(spinnerSpeedFull);
-          while(gamepad2.right_bumper)
-          {
-          }
-          manipulatorPlatform.setSpinnerPower(0);
+          manipulatorPlatform.setSpinnerPower(manipulatorPlatform.spinnerSpeedFull);
+          isSpinning = true;
+          //while(gamepad2.right_bumper  )
+          //{
+          //}
+          //manipulatorPlatform.setSpinnerPower(0);
         }
-        if(gamepad2.left_bumper)
+        else if(!gamepad2.right_bumper && isSpinning)
         {
-          manipulatorPlatform.setSpinnerPower(-spinnerSpeedFull);
-          while(gamepad2.left_bumper)
-          {
-          }
           manipulatorPlatform.setSpinnerPower(0);
+          isSpinning = false;
         }
+        
+        
+        
+        
+        if(gamepad2.left_bumper && !isSpinning)
+        {
+          manipulatorPlatform.setSpinnerPower(-manipulatorPlatform.spinnerSpeedFull);
+          isSpinning = true;
+          //while(gamepad2.left_bumper)
+          //{
+          //}
+          //manipulatorPlatform.setSpinnerPower(0);
+        }
+        else if(!gamepad2.left_bumper && isSpinning)
+        {
+          manipulatorPlatform.setSpinnerPower(0);
+          isSpinning = false;
+        }
+
         
         
         
@@ -135,19 +144,19 @@ public class TeleOpPrimary extends LinearOpMode
 // D‐PAD – Controls
       if (gamepad2.dpad_down)
       {
-        manipulatorPlatform.setArmPosition(armGather);
+        manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather);
       }
       if (gamepad2.dpad_right)
       {
-        manipulatorPlatform.setArmPosition(armLow);
+        manipulatorPlatform.setArmPosition(manipulatorPlatform.armLow);
       }
       if (gamepad2.dpad_left)
       {
-        manipulatorPlatform.setArmPosition(armMid);
+        manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
       }
       if (gamepad2.dpad_up)
       {
-        manipulatorPlatform.setArmPosition(armMax);
+        manipulatorPlatform.setArmPosition(manipulatorPlatform.armMax);
       }
       
       
