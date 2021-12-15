@@ -40,7 +40,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     ;
   private final double spinnerSpeedStop = 0;
   
-  private final int armGather = 15;
+  private final int armGather = 75;
   
   private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Duck";

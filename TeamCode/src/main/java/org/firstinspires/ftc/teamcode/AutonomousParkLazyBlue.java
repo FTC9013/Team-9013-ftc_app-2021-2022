@@ -174,7 +174,7 @@ public class AutonomousParkLazyBlue extends LinearOpMode
       driveChassis.autoDrive(telemetry);
     }
     
-    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+5);
+    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+10);
   
     manipulateTimer.reset();
     while (opModeIsActive() && manipulateTimer.time()< 3.0)

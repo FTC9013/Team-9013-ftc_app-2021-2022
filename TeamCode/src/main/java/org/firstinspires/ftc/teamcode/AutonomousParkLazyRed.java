@@ -175,7 +175,14 @@ public class AutonomousParkLazyRed extends LinearOpMode
       driveChassis.autoDrive(telemetry);
     }
   
-    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+5);
+    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+10);
+  
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+   
   
   
     // After driving do your manipulation.  You may need a timer based state machine but simple
