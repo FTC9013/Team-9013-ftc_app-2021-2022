@@ -40,7 +40,7 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     ;
   private final double spinnerSpeedStop = 0;
   
-  private final int armGather = 15;
+  private final int armGather = 35;
   
   private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Duck";
@@ -110,7 +110,7 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     Queue<Leg> MoveToDuckSpinner = new LinkedList<>();
     MoveToDuckSpinner.add(new Leg(Leg.Mode.RIGHT, 75, 0, 1.25));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 50, 0, 1.2));
+    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 50, 0, 1.1));
     MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
     MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 50, 0, 0.6));
     
@@ -177,6 +177,8 @@ public class AutonomousDuckSpinBlue extends LinearOpMode
     
     driveChassis.startPlan(MoveToParkSpot);
   
+    manipulatorPlatform.setArmPosition(0);
+    
     while (opModeIsActive() && driveChassis.isDriving())
     {
       driveChassis.autoDrive(telemetry);

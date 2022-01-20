@@ -118,7 +118,8 @@ public class AutonomousParkLazyRed extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 100, 0, 1.75));
+    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 100, 0, 1.85));
+    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.7));
     
 
     // Wait for the game to start (driver presses PLAY)

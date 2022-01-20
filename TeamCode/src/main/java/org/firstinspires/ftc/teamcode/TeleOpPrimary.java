@@ -44,7 +44,6 @@ public class TeleOpPrimary extends LinearOpMode
 
     // set dead zone to minimize unwanted stick input.
     //gamepad1.setJoystickDeadzone((float)0.05);
-    manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather);
     boolean goingFast = false;
     boolean goingFastToggle = false;
   
@@ -94,10 +93,17 @@ public class TeleOpPrimary extends LinearOpMode
     
         if(gamepad2.right_bumper && !isSpinning)
         {
-          manipulatorPlatform.setSpinnerPower(manipulatorPlatform.spinnerSpeedFull);
+          manipulatorPlatform.setSpinnerPower(
+            
+            
+            
+            
+            
+            
+            manipulatorPlatform.spinnerSpeedFull);
           isSpinning = true;
           //while(gamepad2.right_bumper  )
-          //{
+          //{BVX
           //}
           //manipulatorPlatform.setSpinnerPower(0);
         }
@@ -166,7 +172,7 @@ public class TeleOpPrimary extends LinearOpMode
       }
       if(gamepad2.y)
       {
-        manipulatorPlatform.setGatherPower(-0.23);
+        manipulatorPlatform.setGatherPower(-0.33);
       }
       if(gamepad2.b)
       {

@@ -40,7 +40,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     ;
   private final double spinnerSpeedStop = 0;
   
-  private final int armGather = 75;
+  private final int armGather = 35;
   
   private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Duck";
@@ -109,9 +109,9 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     // These are the working paths for the OpMode
     Queue<Leg> MoveToDuckSpinner = new LinkedList<>();
     MoveToDuckSpinner.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.5));
-    MoveToDuckSpinner.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 1.25));
+    MoveToDuckSpinner.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 1.30 ));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.5));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.75));
     MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
     MoveToParkSpot.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 0.6));
     

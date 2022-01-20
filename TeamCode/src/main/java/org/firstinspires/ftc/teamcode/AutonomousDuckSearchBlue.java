@@ -1,11 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -39,15 +44,12 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
   private final double spinnerSpeedFull = 0.75;
   private final double spinnerSpeedStop = 0;
   
+  boolean amogus = false;
   
   private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Duck";
   private static final String LABEL_SECOND_ELEMENT = "Marker";
   
-  //private enum duckPosition { UNKNOWN, LEFT, CENTER, RIGHT }
-  //private duckPosition duckPos = duckPosition.UNKNOWN;
-  
-  private boolean duckExist;
   
   /**
    * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -69,6 +71,8 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     driveChassis = new MecanumDriveChassis(hardwareMap);
     manipulatorPlatform = new ManipulatorPlatform(hardwareMap);
     webcamName = hardwareMap.get(WebcamName.class, "Webcam");
+    
+    
     
     //leds = new LEDs(hardwareMap);
     //leds.goOff();
@@ -105,25 +109,26 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     
     
     // These are the working paths for the OpMode
-    Queue<Leg> MoveToTheDuck = new LinkedList<>();
-    MoveToTheDuck.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1));
+    Queue<Leg> MoveToTheAmogus = new LinkedList<>();
+    MoveToTheAmogus.add(new Leg(Leg.Mode.FORWARD, 50, 0, 0.90));
     //now check for duck
-    Queue<Leg> MoveRight = new LinkedList<>();
-    MoveRight.add(new Leg(Leg.Mode.RIGHT, 50, 0, 0.25));
-  
-    Queue<Leg> MoveLeftShort = new LinkedList<>();
-    MoveLeftShort.add(new Leg(Leg.Mode.LEFT, 40, 0, 0.2));
-    Queue<Leg> MoveLeftMedium = new LinkedList<>();
-    MoveLeftMedium.add(new Leg(Leg.Mode.LEFT,  40, 0,0.6));
-    Queue<Leg> MoveLeftLong = new LinkedList<>();
-    MoveLeftLong.add(new Leg(Leg.Mode.LEFT, 40, 0, 1));
+    Queue<Leg> MoveToTheHub = new LinkedList<>();
+    MoveToTheHub.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.25));
+    MoveToTheHub.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1));
+    
+    //Queue<Leg> MoveLeftShort = new LinkedList<>();
+    //MoveLeftShort.add(new Leg(Leg.Mode.LEFT, 40, 0, 0.2));
+    //Queue<Leg> MoveLeftMedium = new LinkedList<>();
+    //MoveLeftMedium.add(new Leg(Leg.Mode.LEFT,  40, 0,0.6));
+   // Queue<Leg> MoveLeftLong = new LinkedList<>();
+    //MoveLeftLong.add(new Leg(Leg.Mode.LEFT, 40, 0, 1));
     
     
     // Wait for the game to start (driver presses PLAY)
     
     // Initialize the vision objects
-    initVuforia();
-    initTfod();
+    //initVuforia();
+    //initTfod();
     
     /**
      * Activate TensorFlow Object Detection before we wait for the start command.
@@ -144,7 +149,12 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     }
     
     waitForStart();
-    
+  
+    // Once per loop, we will update this hsvValues array. The first element (0) will contain the
+    // hue, the second element (1) will contain the saturation, and the third element (2) will
+    // contain the value. See http://web.archive.org/web/20190311170843/https://infohost.nmt.edu/tcc/help/pubs/colortheory/web/hsv.html
+    // for an explanation of HSV color.
+    final float[] hsvValues = new float[3];
     
     // for each piece of the drive & manipulate plan you will need to load a plan and then put
     // a while loop, like the following example, that repeatedly calls the autoDrive method
@@ -153,27 +163,101 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     // If you need more driving load another plan and make another loop.
     
     // potentially do manipulation here.  Make sure it is done before moving on.
+    
+    
+    manipulatorPlatform.initGatherDropper();
   
+    manipulatorPlatform.invertGatherDropper();
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 1.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+    
+    manipulatorPlatform.setArmPosition(manipulatorPlatform.armMax);
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 1.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+    
+    
+    driveChassis.startPlan(MoveToTheAmogus);
+    manipulateTimer.reset();
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
+    {
+      driveChassis.autoDrive(telemetry);
+    }
+    
+    
+    while(opModeIsActive() && !amogus)
+    {
+      // Get the normalized colors from the sensor
+      NormalizedRGBA colorsL = manipulatorPlatform.colorSensorL.getNormalizedColors();
+      NormalizedRGBA colorsR = manipulatorPlatform.colorSensorR.getNormalizedColors();
   
-      driveChassis.startPlan(MoveToTheDuck);
-      if(checkForDuck("Top"))
-      {
-        driveChassis.startPlan(MoveLeftShort);
+      /* Use telemetry to display feedback on the driver station. We show the red, green, and blue
+       * normalized values from the sensor (in the range of 0 to 1), as well as the equivalent
+       * HSV (hue, saturation and value) values. See http://web.archive.org/web/20190311170843/https://infohost.nmt.edu/tcc/help/pubs/colortheory/web/hsv.html
+       * for an explanation of HSV color. */
+      // Update the hsvValues array by passing it to Color.colorToHSV()
+      Color.colorToHSV(colorsL.toColor(), hsvValues);
+  
+      telemetry.addLine()
+        .addData("Red", "%.3f", colorsL.red)
+        .addData("Green", "%.3f", colorsL.green)
+        .addData("Blue", "%.3f", colorsL.blue);
+      telemetry.addLine()
+        .addData("Hue", "%.3f", hsvValues[0])
+        .addData("Saturation", "%.3f", hsvValues[1])
+        .addData("Value", "%.3f", hsvValues[2]);
+      telemetry.addData("Alpha", "%.3f", colorsL.alpha);
+  
+      // Update the hsvValues array by passing it to Color.colorToHSV()
+      Color.colorToHSV(colorsR.toColor(), hsvValues);
+  
+      telemetry.addLine()
+        .addData("Red", "%.3f", colorsR.red)
+        .addData("Green", "%.3f", colorsR.green)
+        .addData("Blue", "%.3f", colorsR.blue);
+      telemetry.addLine()
+        .addData("Hue", "%.3f", hsvValues[0])
+        .addData("Saturation", "%.3f", hsvValues[1])
+        .addData("Value", "%.3f", hsvValues[2]);
+      telemetry.addData("Alpha", "%.3f", colorsR.alpha);
+  
+      if (manipulatorPlatform.colorSensorL instanceof DistanceSensor) {
+        telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) manipulatorPlatform.colorSensorL).getDistance(DistanceUnit.CM));
       }
+  
+      if (manipulatorPlatform.colorSensorR instanceof DistanceSensor) {
+        telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) manipulatorPlatform.colorSensorR).getDistance(DistanceUnit.CM));
+      }
+  
+      telemetry.update();
       
-      driveChassis.startPlan(MoveRight);
-      if(checkForDuck("Middle"))
-      {
-        driveChassis.startPlan(MoveLeftMedium);
-      }
-      driveChassis.startPlan(MoveRight);
-      if(checkForDuck("Low"))
-      {
-        driveChassis.startPlan(MoveLeftLong);
-      }
+          /*
+    if(colorsL.blue > 0.1 && colorsR.blue > 0.1)
+    {
+      //must be all the way to the right
+    }
+    else if(colorsL.blue > 0.1)
+    {
+      //must be on the right
+    }
+    else if(colorsR.blue < 0.1)
+    {
+      //must be on the left
+    }
+
+
+      driveChassis.startPlan(MoveToTheHub);
     
+    */
     
-    
+    }
+
+
     
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
@@ -239,6 +323,7 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
   /*
    * Initialize the Tensor Flow Object Detection engine.
    */
+  /*
   private void initTfod()
   {
     int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
@@ -322,6 +407,6 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     }
     return duckExist;
   }
-  
+  */
   
 }

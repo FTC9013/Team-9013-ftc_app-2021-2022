@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,33 +24,33 @@ public class ManipulatorPlatform
   
   private Servo gatherDrop = null;
   
-  private ColorSensor colorSensorL = null;
-  private ColorSensor colorSensorR = null;
+  public NormalizedColorSensor colorSensorL = null;
+  public NormalizedColorSensor colorSensorR = null;
   
-  static final double armP = 30;
+  static final double armP = 15;
   static final double armI = 0;
   static final double armD = 0;
   static final double armF = 0;
-  
+
   static final double gatherP = 0;
   static final double gatherI = 0;
   static final double gatherD = 0;
   static final double gatherF = 0;
-  
+
   static final double spinnerP = 40;
   static final double spinnerI = 0;
   static final double spinnerD = 0;
   static final double spinnerF = 0;
-  
+
   public final double highSpeed = 1.0;
   public final double lowSpeed = 0.5;
   
-  public final int armGather = 0;
+  public final int armGather = 35;
   public final int armLow = 468;
-  public final int armMid = 936;
-  public final int armMax = 1976;
+  public final int armMid = 1396;
+  public final int armMax = 2422;
   
-  public final double spinnerSpeedFull = 0.8;
+  public final double spinnerSpeedFull = 1;
   public final double spinnerSpeedStop = 0;
   
   ManipulatorPlatform(HardwareMap hardwareMap)
@@ -62,7 +66,7 @@ public class ManipulatorPlatform
     armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     armMotor.setTargetPosition(0);
     armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    armMotor.setPower(0.5);
+    armMotor.setPower(0.4);
     /*
     spinnerMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "spinnerMotor");
     spinnerMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -83,8 +87,8 @@ public class ManipulatorPlatform
   
     gatherDrop = hardwareMap.get(Servo.class,"gatherDrop");
     
-    //colorSensorL = hardwareMap.get(ColorSensor.class, "leftSensor");
-    //colorSensorR = hardwareMap.get(ColorSensor.class, "rightSensor");
+    colorSensorL = hardwareMap.get(NormalizedColorSensor.class, "leftSensor");
+    colorSensorR = hardwareMap.get(NormalizedColorSensor.class, "rightSensor");
     
   }
   
@@ -161,7 +165,7 @@ public class ManipulatorPlatform
   {
     gatherDrop.setPosition(0);
   }
-
+  
   /*  void resetExtender()
   {
     boolean calFlag = true;
