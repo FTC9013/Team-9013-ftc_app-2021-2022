@@ -93,14 +93,7 @@ public class TeleOpPrimary extends LinearOpMode
     
         if(gamepad2.right_bumper && !isSpinning)
         {
-          manipulatorPlatform.setSpinnerPower(
-            
-            
-            
-            
-            
-            
-            manipulatorPlatform.spinnerSpeedFull);
+          manipulatorPlatform.setSpinnerPower(1);
           isSpinning = true;
           //while(gamepad2.right_bumper  )
           //{BVX
@@ -118,7 +111,7 @@ public class TeleOpPrimary extends LinearOpMode
         
         if(gamepad2.left_bumper && !isSpinning)
         {
-          manipulatorPlatform.setSpinnerPower(-manipulatorPlatform.spinnerSpeedFull);
+          manipulatorPlatform.setSpinnerPower(-1);
           isSpinning = true;
           //while(gamepad2.left_bumper)
           //{
@@ -130,8 +123,9 @@ public class TeleOpPrimary extends LinearOpMode
           manipulatorPlatform.setSpinnerPower(0);
           isSpinning = false;
         }
+  
+  
 
-        
         
         
         /*

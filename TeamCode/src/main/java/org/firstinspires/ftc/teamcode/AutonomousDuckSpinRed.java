@@ -111,7 +111,7 @@ public class AutonomousDuckSpinRed extends LinearOpMode
     MoveToDuckSpinner.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.5));
     MoveToDuckSpinner.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 1.30 ));
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.75));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.54));
     MoveToParkSpot.add(new Leg(Leg.Mode.TURN, 50, 0, 0));
     MoveToParkSpot.add(new Leg(Leg.Mode.BACKWARDS, 50, 0, 0.6));
     

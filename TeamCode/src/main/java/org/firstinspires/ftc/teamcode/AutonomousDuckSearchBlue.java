@@ -46,6 +46,8 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
   
   boolean amogus = false;
   
+  double threshold = 0.075;
+  
   private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Duck";
   private static final String LABEL_SECOND_ELEMENT = "Marker";
@@ -110,11 +112,11 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToTheAmogus = new LinkedList<>();
-    MoveToTheAmogus.add(new Leg(Leg.Mode.FORWARD, 50, 0, 0.90));
+    MoveToTheAmogus.add(new Leg(Leg.Mode.FORWARD, 25, 0, 1.125));
     //now check for duck
     Queue<Leg> MoveToTheHub = new LinkedList<>();
     MoveToTheHub.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.25));
-    MoveToTheHub.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1));
+    MoveToTheHub.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1.0));
     
     //Queue<Leg> MoveLeftShort = new LinkedList<>();
     //MoveLeftShort.add(new Leg(Leg.Mode.LEFT, 40, 0, 0.2));
@@ -166,21 +168,20 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     
     
     manipulatorPlatform.initGatherDropper();
-  
-    manipulatorPlatform.invertGatherDropper();
     manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 1.0)
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
     {
       driveChassis.autoDrive(telemetry);
     }
     
+    manipulatorPlatform.invertGatherDropper();
+   
     manipulatorPlatform.setArmPosition(manipulatorPlatform.armMax);
     manipulateTimer.reset();
-    while (opModeIsActive() && manipulateTimer.time()< 1.0)
+    while (opModeIsActive() && manipulateTimer.time()< 3.0)
     {
       driveChassis.autoDrive(telemetry);
     }
-    
     
     driveChassis.startPlan(MoveToTheAmogus);
     manipulateTimer.reset();
@@ -204,28 +205,28 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
       Color.colorToHSV(colorsL.toColor(), hsvValues);
   
       telemetry.addLine()
-        .addData("Red", "%.3f", colorsL.red)
-        .addData("Green", "%.3f", colorsL.green)
-        .addData("Blue", "%.3f", colorsL.blue);
-      telemetry.addLine()
+        .addData("LEFT Red", "%.3f", colorsL.red)
+        .addData("LEFT Green", "%.3f", colorsL.green)
+        .addData("LEFT Blue", "%.3f", colorsL.blue);
+    /*  telemetry.addLine()
         .addData("Hue", "%.3f", hsvValues[0])
         .addData("Saturation", "%.3f", hsvValues[1])
         .addData("Value", "%.3f", hsvValues[2]);
       telemetry.addData("Alpha", "%.3f", colorsL.alpha);
-  
+    */
       // Update the hsvValues array by passing it to Color.colorToHSV()
       Color.colorToHSV(colorsR.toColor(), hsvValues);
   
       telemetry.addLine()
-        .addData("Red", "%.3f", colorsR.red)
-        .addData("Green", "%.3f", colorsR.green)
-        .addData("Blue", "%.3f", colorsR.blue);
-      telemetry.addLine()
+        .addData("RIGHT Red", "%.3f", colorsR.red)
+        .addData("RIGHT Green", "%.3f", colorsR.green)
+        .addData("RIGHT Blue", "%.3f", colorsR.blue);
+      /*telemetry.addLine()
         .addData("Hue", "%.3f", hsvValues[0])
         .addData("Saturation", "%.3f", hsvValues[1])
         .addData("Value", "%.3f", hsvValues[2]);
       telemetry.addData("Alpha", "%.3f", colorsR.alpha);
-  
+  */
       if (manipulatorPlatform.colorSensorL instanceof DistanceSensor) {
         telemetry.addData("Distance (cm)", "%.3f", ((DistanceSensor) manipulatorPlatform.colorSensorL).getDistance(DistanceUnit.CM));
       }
@@ -235,26 +236,47 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
       }
   
       telemetry.update();
+  
+      manipulateTimer.reset();
+      while (opModeIsActive() && manipulateTimer.time()< 5.0)
+      {
+        driveChassis.autoDrive(telemetry);
+        telemetry.update();
+      }
       
-          /*
-    if(colorsL.blue > 0.1 && colorsR.blue > 0.1)
-    {
-      //must be all the way to the right
+    if(colorsL.blue < threshold && colorsR.blue < threshold)
+      {
+      //amogus must be all the way to the right
+      manipulatorPlatform.setArmPosition(manipulatorPlatform.armMax);
+      while (opModeIsActive() && manipulateTimer.time()< 3.0)
+      {
+        driveChassis.autoDrive(telemetry);
+      }
+      amogus = true;
     }
-    else if(colorsL.blue > 0.1)
+    else if(colorsL.blue < threshold && colorsR.blue > threshold)
     {
-      //must be on the right
+      //amogus must be in the middle
+      manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
+      while (opModeIsActive() && manipulateTimer.time()< 3.0)
+      {
+        driveChassis.autoDrive(telemetry);
+      }
+      amogus = true;
     }
-    else if(colorsR.blue < 0.1)
+    else if(colorsL.blue > threshold && colorsR.blue < threshold)
     {
-      //must be on the left
+      //amogus must be all the way to the left
+      manipulatorPlatform.setArmPosition(manipulatorPlatform.armLow);
+      while (opModeIsActive() && manipulateTimer.time()< 3.0)
+      {
+        driveChassis.autoDrive(telemetry);
+      }
+      amogus = true;
     }
 
 
       driveChassis.startPlan(MoveToTheHub);
-    
-    */
-    
     }
 
 
