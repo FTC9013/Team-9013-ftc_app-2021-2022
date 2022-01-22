@@ -7,18 +7,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.Leg;
-import org.firstinspires.ftc.teamcode.ManipulatorPlatform;
-import org.firstinspires.ftc.teamcode.MecanumDriveChassis;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
-@Autonomous(name = "AutonomousParkLazyRed", group = "Linear Opmode")
+@Autonomous(name = "AutonomousParkLazyForwardBlue", group = "Linear Opmode")
 
 //@Disabled
-public class AutonomousParkLazyRed extends LinearOpMode
+public class AutonomousParkLazyForwardBlue extends LinearOpMode
 {
   
   // Declare OpMode members.
@@ -118,11 +117,10 @@ public class AutonomousParkLazyRed extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.RIGHT, 70, 0, 1.4));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 100, 0, 1.2));
+    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.6));
     
-   
-    
-    
+
     // Wait for the game to start (driver presses PLAY)
     
     // Initialize the vision objects
@@ -157,36 +155,35 @@ public class AutonomousParkLazyRed extends LinearOpMode
     // If you need more driving load another plan and make another loop.
     
     // potentially do manipulation here.  Make sure it is done before moving on.
-    
+  
     manipulatorPlatform.initGatherDropper();
-    
+  
     manipulateTimer.reset();
     while (opModeIsActive() && manipulateTimer.time()< 3.0)
     {
       driveChassis.autoDrive(telemetry);
     }
-    
+  
     manipulatorPlatform.invertGatherDropper();
     
     manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
     
     driveChassis.startPlan(MoveToParkSpot);
-    
+  
     while (opModeIsActive() && driveChassis.isDriving())
     {
       driveChassis.autoDrive(telemetry);
     }
     
     manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+10);
-    
+  
     manipulateTimer.reset();
     while (opModeIsActive() && manipulateTimer.time()< 3.0)
     {
       driveChassis.autoDrive(telemetry);
     }
-    
-    
-    
+  
+  
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
     

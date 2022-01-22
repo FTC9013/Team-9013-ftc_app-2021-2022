@@ -117,10 +117,10 @@ public class AutonomousParkLazyBlue extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToParkSpot = new LinkedList<>();
-    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 100, 0, 1.85));
-    MoveToParkSpot.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.7));
+    MoveToParkSpot.add(new Leg(Leg.Mode.LEFT, 100, 0, 1.7));
+   
     
-
+    
     // Wait for the game to start (driver presses PLAY)
     
     // Initialize the vision objects
@@ -155,35 +155,35 @@ public class AutonomousParkLazyBlue extends LinearOpMode
     // If you need more driving load another plan and make another loop.
     
     // potentially do manipulation here.  Make sure it is done before moving on.
-  
+    
     manipulatorPlatform.initGatherDropper();
-  
+    
     manipulateTimer.reset();
     while (opModeIsActive() && manipulateTimer.time()< 3.0)
     {
       driveChassis.autoDrive(telemetry);
     }
-  
+    
     manipulatorPlatform.invertGatherDropper();
     
     manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
     
     driveChassis.startPlan(MoveToParkSpot);
-  
+    
     while (opModeIsActive() && driveChassis.isDriving())
     {
       driveChassis.autoDrive(telemetry);
     }
     
     manipulatorPlatform.setArmPosition(manipulatorPlatform.armGather+10);
-  
+    
     manipulateTimer.reset();
     while (opModeIsActive() && manipulateTimer.time()< 3.0)
     {
       driveChassis.autoDrive(telemetry);
     }
-  
-  
+    
+    
     // After driving do your manipulation.  You may need a timer based state machine but simple
     // actions can just be done inline.
     

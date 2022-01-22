@@ -14,7 +14,8 @@ public class TeleOpPrimary extends LinearOpMode
   private ManipulatorPlatform manipulatorPlatform;
   //private LEDs leds;
   
-
+  enum keyOwner { RIGHT, LEFT, NONE };
+  keyOwner owner = keyOwner.NONE;
   
   /*
   private final double shooterSpeedFull = 130;
@@ -46,8 +47,8 @@ public class TeleOpPrimary extends LinearOpMode
     //gamepad1.setJoystickDeadzone((float)0.05);
     boolean goingFast = false;
     boolean goingFastToggle = false;
-  
-    boolean isSpinning = false;
+    
+    //boolean isSpinning = false;
     
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
@@ -91,37 +92,41 @@ public class TeleOpPrimary extends LinearOpMode
           goingFastToggle = false;
         }
     
-        if(gamepad2.right_bumper && !isSpinning)
+        
+        
+        
+        
+        if(gamepad2.right_bumper && owner == keyOwner.NONE)
         {
           manipulatorPlatform.setSpinnerPower(1);
-          isSpinning = true;
+          owner = keyOwner.RIGHT;
           //while(gamepad2.right_bumper  )
           //{BVX
           //}
           //manipulatorPlatform.setSpinnerPower(0);
         }
-        else if(!gamepad2.right_bumper && isSpinning)
+        else if(!gamepad2.right_bumper && owner == keyOwner.RIGHT)
         {
           manipulatorPlatform.setSpinnerPower(0);
-          isSpinning = false;
+          owner = keyOwner.NONE;
         }
         
         
         
         
-        if(gamepad2.left_bumper && !isSpinning)
+        if(gamepad2.left_bumper && owner == keyOwner.NONE)
         {
           manipulatorPlatform.setSpinnerPower(-1);
-          isSpinning = true;
+          owner = keyOwner.LEFT;
           //while(gamepad2.left_bumper)
           //{
           //}
           //manipulatorPlatform.setSpinnerPower(0);
         }
-        else if(!gamepad2.left_bumper && isSpinning)
+        else if(!gamepad2.left_bumper && owner == keyOwner.LEFT)
         {
           manipulatorPlatform.setSpinnerPower(0);
-          isSpinning = false;
+          owner = keyOwner.NONE;
         }
   
   

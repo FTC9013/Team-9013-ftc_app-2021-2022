@@ -46,7 +46,7 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
   
   boolean amogus = false;
   
-  double threshold = 0.075;
+  double threshold = 4.0;
   
   private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
   private static final String LABEL_FIRST_ELEMENT = "Duck";
@@ -112,11 +112,11 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
     
     // These are the working paths for the OpMode
     Queue<Leg> MoveToTheAmogus = new LinkedList<>();
-    MoveToTheAmogus.add(new Leg(Leg.Mode.FORWARD, 25, 0, 1.125));
+    MoveToTheAmogus.add(new Leg(Leg.Mode.FORWARD, 25, 0, 2.1));
     //now check for duck
     Queue<Leg> MoveToTheHub = new LinkedList<>();
-    MoveToTheHub.add(new Leg(Leg.Mode.LEFT, 50, 0, 0.25));
-    MoveToTheHub.add(new Leg(Leg.Mode.FORWARD, 100, 0, 1.0));
+    MoveToTheHub.add(new Leg(Leg.Mode.LEFT, 50, 0, 1.5));
+    MoveToTheHub.add(new Leg(Leg.Mode.FORWARD, 100, 0, 0.25));
     
     //Queue<Leg> MoveLeftShort = new LinkedList<>();
     //MoveLeftShort.add(new Leg(Leg.Mode.LEFT, 40, 0, 0.2));
@@ -243,40 +243,87 @@ public class AutonomousDuckSearchBlue extends LinearOpMode
         driveChassis.autoDrive(telemetry);
         telemetry.update();
       }
+        
+        if(((DistanceSensor) manipulatorPlatform.colorSensorR).getDistance(DistanceUnit.CM) > threshold && ((DistanceSensor) manipulatorPlatform.colorSensorL).getDistance(DistanceUnit.CM) > threshold)
+          {
+            driveChassis.startPlan(MoveToTheHub);
+            manipulateTimer.reset();
+            while (opModeIsActive() && manipulateTimer.time()< 3.0)
+            {
+              driveChassis.autoDrive(telemetry);
+            }
+            
+            
+          //amogus must be all the way to the right
+          manipulatorPlatform.setArmPosition(manipulatorPlatform.armMax);
+            manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+  
+           manipulatorPlatform.setGatherPower(-0.33);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          amogus = true;
+          
+          }
+        else if(((DistanceSensor) manipulatorPlatform.colorSensorR).getDistance(DistanceUnit.CM) < ((DistanceSensor) manipulatorPlatform.colorSensorL).getDistance(DistanceUnit.CM))
+        {
+          driveChassis.startPlan(MoveToTheHub);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          
+          //amogus must be in the middle
+          manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          manipulatorPlatform.setGatherPower(-0.33);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          amogus = true;
+        
+        }
+        else if(((DistanceSensor) manipulatorPlatform.colorSensorR).getDistance(DistanceUnit.CM) > ((DistanceSensor) manipulatorPlatform.colorSensorL).getDistance(DistanceUnit.CM))
+        {
+          
+          driveChassis.startPlan(MoveToTheHub);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          
+          //amogus must be all the way to the left
+          manipulatorPlatform.setArmPosition(manipulatorPlatform.armLow);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          manipulatorPlatform.setGatherPower(-0.33);
+          manipulateTimer.reset();
+          while (opModeIsActive() && manipulateTimer.time()< 3.0)
+          {
+            driveChassis.autoDrive(telemetry);
+          }
+          amogus = true;
+        }
       
-    if(colorsL.blue < threshold && colorsR.blue < threshold)
-      {
-      //amogus must be all the way to the right
-      manipulatorPlatform.setArmPosition(manipulatorPlatform.armMax);
-      while (opModeIsActive() && manipulateTimer.time()< 3.0)
-      {
-        driveChassis.autoDrive(telemetry);
-      }
-      amogus = true;
-    }
-    else if(colorsL.blue < threshold && colorsR.blue > threshold)
-    {
-      //amogus must be in the middle
-      manipulatorPlatform.setArmPosition(manipulatorPlatform.armMid);
-      while (opModeIsActive() && manipulateTimer.time()< 3.0)
-      {
-        driveChassis.autoDrive(telemetry);
-      }
-      amogus = true;
-    }
-    else if(colorsL.blue > threshold && colorsR.blue < threshold)
-    {
-      //amogus must be all the way to the left
-      manipulatorPlatform.setArmPosition(manipulatorPlatform.armLow);
-      while (opModeIsActive() && manipulateTimer.time()< 3.0)
-      {
-        driveChassis.autoDrive(telemetry);
-      }
-      amogus = true;
-    }
 
 
-      driveChassis.startPlan(MoveToTheHub);
     }
 
 
